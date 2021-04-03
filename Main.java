@@ -10,7 +10,7 @@ import java.io.*;
 
 
 public class Main {
-    public static Date system_date;
+
     public static Date latest_date;
     private static Scanner scanner = new Scanner(System.in);
     public static Connection connect() {
@@ -30,7 +30,7 @@ public class Main {
         }
         return conn;
     }
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException, SQLException {
         boolean end = false;
         while(!end) {
 	        System.out.println("The System Date is now: ");
@@ -47,15 +47,11 @@ public class Main {
                     BookSystem.init();
                     break;
                 case 4:
+                    System.out.println("Today is "+BookSystem.system_date);
+                    
                     
 
-                    
-                    
-
-
-
-
-
+                
 
 
                 case 5:
