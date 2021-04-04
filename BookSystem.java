@@ -66,6 +66,13 @@ public class BookSystem {
             "credit_card_no varchar(19),"+
             "PRIMARY KEY (customer_id))";
 
+        String Ordering = "CREATE TABLE IF NOT EXISTS Ordering"+
+            "(order_id char(8),"+
+            "ISBN char(13),"+
+            "quantity integer NOT NULL,"+
+            "PRIMARY KEY (order_id, ISBN),"+
+            "FOREIGN KEY (ISBN) REFERENCES Book(ISBN))";
+        
         String Orders = "CREATE TABLE IF NOT EXISTS Orders"+
             "(order_id char(8),"+
             "o_date Date,"+
@@ -73,15 +80,8 @@ public class BookSystem {
             "charge integer NOT NULL,"+
             "customer_id varchar(10) NOT NULL,"+
             "PRIMARY KEY (order_id),"+
+            "FOREIGN KEY (order_id) REFERENCES Ordering(order_id),"+
             "FOREIGN KEY (customer_id) REFERENCES Customer(customer_id))";
-
-        String Ordering = "CREATE TABLE IF NOT EXISTS Ordering"+
-            "(order_id char(8),"+
-            "ISBN char(13),"+
-            "quantity integer NOT NULL,"+
-            "PRIMARY KEY (order_id, ISBN),"+
-            "FOREIGN KEY (order_id) REFERENCES Orders(order_id),"+
-            "FOREIGN KEY (ISBN) REFERENCES Book(ISBN))";
 
         String Book_author = "CREATE TABLE IF NOT EXISTS Book_author"+
             "(ISBN char(13),"+
@@ -93,8 +93,8 @@ public class BookSystem {
             Statement stmt = conn.createStatement();
             stmt.executeUpdate(Book);
             stmt.executeUpdate(Customer);
-            stmt.executeUpdate(Orders);
             stmt.executeUpdate(Ordering);
+            stmt.executeUpdate(Orders);
             stmt.executeUpdate(Book_author);
         }catch (SQLException e){
             System.out.println(e.getMessage());
@@ -122,7 +122,7 @@ public class BookSystem {
     }
 
     private static void insertData() throws IOException {
-        String[] files = {"book.txt", "customer.txt", "orders.txt", "ordering.txt", "book_author.txt"};
+        String[] files = {"book.txt", "customer.txt", "ordering.txt", "orders.txt", "book_author.txt"};
         System.out.println("Please enter the folder path");
         Scanner scanner = new Scanner(System.in);
         String folder_path = scanner.next();
@@ -163,7 +163,6 @@ public class BookSystem {
                             columns[1] = "STR_TO_DATE('"+columns[1]+"','%Y-%m-%d')";
                             columns[2] = "'"+columns[2]+"'";
                             columns[4] = "'"+columns[4]+"'";
-                            System.out.println("INSERT into Orders VALUES (" + String.join(",",columns) + ")");
                             stmt.executeUpdate("INSERT into Orders VALUES (" + String.join(",",columns) + ")");
                         } catch (SQLException e) {
                             e.printStackTrace();
