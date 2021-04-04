@@ -197,26 +197,33 @@ public class BookSystem {
         }
     }
 
-    private static void setDate() throws SQLException, ParseException {
+    private static void setDate() {
         System.out.print("Please Input the date (YYYYMMDD): ");
         Scanner scanner = new Scanner(System.in);
         String date = scanner.next();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
         LocalDate date2 = LocalDate.parse(date, formatter);
-        Statement stmt = conn.createStatement();
-        String query = "SELECT MAX(O.o_date) FROM Orders O";
-        ResultSet rs = stmt.executeQuery(query);
         Date latest_date = null;
-
-        while(rs.next()){
-            latest_date = rs.getDate("o_date");
+        try{
+            Statement stmt = conn.createStatement();
+            String query = "SELECT * FROM Orders ";
+            ResultSet rs = stmt.executeQuery(query);
+            while(rs.next()){
+                latest_date = rs.getDate("o_date");
+            }
+        }catch (SQLException e){
+            System.out.println(e.getMessage());
         }
-
+            
         latest_date.toLocalDate();
         System.out.println("Latest date in orders: "+latest_date);
-        System.out.println(latest_date.getClass().getSimpleName());
-
-        
+        if (system_date == null){
+            system_date =date2;
+        }
+        if(date2.isAfter(system_date) == true){
+            system_date =date2;
+        }
+        System.out.println("Today is "+system_date);
     }
 }
 

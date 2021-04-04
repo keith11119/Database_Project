@@ -30,10 +30,10 @@ public class Main {
         }
         return conn;
     }
-    public static void main(String[] args) throws IOException, SQLException {
+    public static void main(String[] args) throws IOException, SQLException, ParseException {
         boolean end = false;
         while(!end) {
-	        System.out.println("The System Date is now: ");
+	        System.out.println("The System Date is now: "+BookSystem.system_date);
             System.out.println("<This is the Book Ordering System.>");
             System.out.println("---------------------------------------");
             System.out.println("1. System interface.");
