@@ -10,7 +10,7 @@ import java.io.*;
 
 
 public class Main {
-    public static Date system_date;
+
     public static Date latest_date;
     private static Scanner scanner = new Scanner(System.in);
     public static Connection connect() {
@@ -30,10 +30,10 @@ public class Main {
         }
         return conn;
     }
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException, SQLException, ParseException {
         boolean end = false;
         while(!end) {
-	        System.out.println("The System Date is now: ");
+	        System.out.println("The System Date is now: "+BookSystem.system_date);
             System.out.println("<This is the Book Ordering System.>");
             System.out.println("---------------------------------------");
             System.out.println("1. System interface.");
@@ -46,16 +46,15 @@ public class Main {
                 case 1:
                     BookSystem.init();
                     break;
+                case 2:
+                    Customer.init();
+                    break;
                 case 4:
+                    System.out.println("Today is "+BookSystem.system_date);
+                    break;
                     
 
-                    
-                    
-
-
-
-
-
+                
 
 
                 case 5:
