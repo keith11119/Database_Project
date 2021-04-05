@@ -33,34 +33,41 @@ public class Main {
     public static void main(String[] args) throws IOException, SQLException, ParseException {
         boolean end = false;
         while(!end) {
-	        System.out.println("The System Date is now: "+BookSystem.system_date);
-            System.out.println("<This is the Book Ordering System.>");
-            System.out.println("---------------------------------------");
-            System.out.println("1. System interface.");
-            System.out.println("2. Customer interface.");
-            System.out.println("3. Bookstore interface.");
-            System.out.println("4. Show System Date.");
-            System.out.print("5. Quit the system......\n\nPlease enter your choice??..");
-	        int identity = scanner.nextInt();
-            switch (identity) {
-                case 1:
-                    BookSystem.init();
-                    break;
-                case 2:
-                    Customer.init();
-                    break;
-                case 4:
-                    System.out.println("Today is "+BookSystem.system_date);
-                    break;
-                    
-
-                
-
-
-                case 5:
-                    end = true;
-                    break;
+            boolean book_order_system = false;
+            while (!book_order_system) {
+                try {
+                    System.out.println("The System Date is now: "+BookSystem.system_date);
+                    System.out.println("<This is the Book Ordering System.>");
+                    System.out.println("---------------------------------------");
+                    System.out.println("1. System interface.");
+                    System.out.println("2. Customer interface.");
+                    System.out.println("3. Bookstore interface.");
+                    System.out.println("4. Show System Date.");
+                    System.out.print("5. Quit the system......\n\nPlease enter your choice??..");
+                    Scanner scanner_book_order_system = new Scanner(System.in);
+                    int identity = scanner_book_order_system.nextInt();
+                    book_order_system = true;
+                    switch (identity) {
+                        case 1:
+                            BookSystem.init();
+                            break;
+                        case 2:
+                            Customer.init();
+                            break;
+                        case 4:
+                            System.out.println("Today is "+BookSystem.system_date);
+                            break;
+                        case 5:
+                            end = true;
+                            break;
+                        default:
+                            System.out.println("[Error] Invalid Input! Please input 1 - 5!");
+                    }
+                } catch (Exception e) {
+                    System.out.println("Error] Invalid Input! Please input 1 - 5!");
+                }
             }
+	        
             System.out.println("");
         }
     }
