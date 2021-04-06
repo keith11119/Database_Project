@@ -36,7 +36,7 @@ public class Main {
             if (BookSystem.system_date == null){
                 System.out.println("The System Date is now: 0000-00-00");
             }else {
-                System.out.println("the System Date is now: "+BookSystem.system_date);
+                System.out.println("The System Date is now: "+BookSystem.system_date);
             }
             System.out.println("<This is the Book Ordering System.>");
             System.out.println("---------------------------------------");
@@ -59,7 +59,11 @@ public class Main {
                     Bookstore.init();
                     break;
                 case 4:
-                    System.out.println("Today is "+BookSystem.system_date);
+                    if (BookSystem.system_date == null){
+                        System.out.println("[Error] Please enter the system date first!");
+                    }else {
+                        System.out.println("The System Date is now: "+BookSystem.system_date);
+                    }
                     break;
                 case 5:
                     end = true;

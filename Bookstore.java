@@ -128,7 +128,7 @@ public class Bookstore {
         Scanner nscanner = new Scanner (System.in);
         int n = nscanner.nextInt();
         while (n <= 0){
-            System.out.print("[ERROR] Invalid input. Please input a number larger than 0.");
+            System.out.print("[ERROR] Invalid input. Please input a number larger than 0: ");
             n = nscanner.nextInt();
         }
         // find the sum of ordered quantity of each book
@@ -185,7 +185,6 @@ public class Bookstore {
         // check if the order id is in the table
         ArrayList<String> validList = new ArrayList <>();
         try{
-            System.out.println(id);
             String validIDSQL = "SELECT * FROM Ordering WHERE order_id = \"" + id + "\"";
             
             Statement stmt = conn.createStatement();

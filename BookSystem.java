@@ -104,16 +104,16 @@ public class BookSystem {
     private static void deleteTable() {
         String Book = "DROP TABLE IF EXISTS Book";
         String Customer = "DROP TABLE IF EXISTS Customer";
-        String Orders = "DROP TABLE IF EXISTS Orders";
         String Ordering = "DROP TABLE IF EXISTS Ordering";
+        String Orders = "DROP TABLE IF EXISTS Orders";
         String Book_author = "DROP TABLE IF EXISTS Book_author";
     
         try {
             Statement stmt = conn.createStatement();
             // drop table
             stmt.executeUpdate(Book_author);
-            stmt.executeUpdate(Ordering);
             stmt.executeUpdate(Orders);
+            stmt.executeUpdate(Ordering);
             stmt.executeUpdate(Customer);
             stmt.executeUpdate(Book);
         } catch (SQLException e) {
@@ -197,32 +197,55 @@ public class BookSystem {
     }
 
     private static void setDate() {
-        System.out.print("Please Input the date (YYYYMMDD): ");
-        Scanner scanner = new Scanner(System.in);
-        String date = scanner.next();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
-        LocalDate date2 = LocalDate.parse(date, formatter);
-        Date latest_date = null;
-        try{
-            Statement stmt = conn.createStatement();
-            String query = "SELECT * FROM Orders ";
-            ResultSet rs = stmt.executeQuery(query);
-            while(rs.next()){
-                latest_date = rs.getDate("o_date");
+        boolean end = false;
+        boolean correct_state = false;
+        while(!correct_state){
+            try{
+                System.out.print("Please Input the date (YYYYMMDD): ");
+                Scanner scanner = new Scanner(System.in);
+                String date = scanner.next();
+                correct_state=true;
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
+                LocalDate date2 = LocalDate.parse(date, formatter);
+                Date latest_date = null;
+                try{
+                    Statement stmt = conn.createStatement();
+                    String query = "SELECT * FROM Orders ";
+                    ResultSet rs = stmt.executeQuery(query);
+                    while(rs.next()){
+                        latest_date = rs.getDate("o_date");
+                    }
+                }catch (SQLException e){
+                    System.out.println(e.getMessage());
+                }
+                try {
+                    latest_date.toLocalDate();
+                    System.out.println("Latest date in orders: "+latest_date);
+                    if(system_date == null && date2.isAfter(latest_date.toLocalDate())== true){
+                        system_date =date2;
+                        System.out.println("Today is "+system_date);
+                    }
+                    else if(date2.isAfter(system_date) == true && date2.isAfter(latest_date.toLocalDate()) == true ){
+                        system_date =date2;
+                        System.out.println("Today is "+system_date);
+                    }  
+                    else if (date2.isAfter(system_date) == false || date2.isAfter(latest_date.toLocalDate())==false){
+                        System.out.println("[Error] Invalid Input! It is set backward!");
+                        correct_state=false;
+                    }
+                } catch (Exception e) {
+                    System.out.println("[Error] Invalid Input! It is set backward!");
+
+
+                        //TODO: handle exception
+                }
+                   
+            }catch(Exception e){
+                System.out.println("Incorrect format.");
             }
-        }catch (SQLException e){
-            System.out.println(e.getMessage());
-        }
-            
-        latest_date.toLocalDate();
-        System.out.println("Latest date in orders: "+latest_date);
-        if (system_date == null){
-            system_date =date2;
-        }
-        if(date2.isAfter(system_date) == true){
-            system_date =date2;
-        }
-        System.out.println("Today is "+system_date);
+
+        }      
+
     }
 }
 
