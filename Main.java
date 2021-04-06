@@ -33,7 +33,11 @@ public class Main {
     public static void main(String[] args) throws IOException, SQLException, ParseException {
         boolean end = false;
         while(!end) {
-	        System.out.println("The System Date is now: "+BookSystem.system_date);
+            if (BookSystem.system_date == null){
+                System.out.println("The System Date is now: 0000-00-00");
+            }else{
+                System.out.println("The System Date is now: "+BookSystem.system_date);
+            }
             System.out.println("<This is the Book Ordering System.>");
             System.out.println("---------------------------------------");
             System.out.println("1. System interface.");
@@ -48,6 +52,7 @@ public class Main {
                     break;
                 case 4:
                     System.out.println("Today is "+BookSystem.system_date);
+                    break;
                     
                     
 
