@@ -6,7 +6,6 @@ import java.util.Scanner;
 import java.util.ArrayList;
 import java.util.Collections;
 
-
 public class Bookstore {
 
     private static boolean quit = false;
@@ -113,6 +112,10 @@ public class Bookstore {
         System.out.print("Please input the Month for Order Query (e.g.2005-09): ");
         Scanner datescanner = new Scanner (System.in);
         String InputDate = datescanner.next();
+        while (!(InputDate.length() == 7)){
+            System.out.print("Invalid Input. Please try again: ");
+            InputDate = datescanner.next();
+        }
         // find the input year and input month
         String[] parts = InputDate.split("-");
         int InputYear = Integer.parseInt(parts[0]);
@@ -128,7 +131,7 @@ public class Bookstore {
         Scanner nscanner = new Scanner (System.in);
         int n = nscanner.nextInt();
         while (n <= 0){
-            System.out.print("[ERROR] Invalid input. Please input a number larger than 0: ");
+            System.out.print("[ERROR] Invalid input. Please input a number larger than 0.");
             n = nscanner.nextInt();
         }
         // find the sum of ordered quantity of each book
@@ -186,7 +189,6 @@ public class Bookstore {
         ArrayList<String> validList = new ArrayList <>();
         try{
             String validIDSQL = "SELECT * FROM Ordering WHERE order_id = \"" + id + "\"";
-            
             Statement stmt = conn.createStatement();
             ResultSet valid = stmt.executeQuery(validIDSQL);
             while(valid.next()){
@@ -215,9 +217,9 @@ public class Bookstore {
             status.next();
             s = status.getString("shipping_status").charAt(0);
         }  catch(SQLException se){
-            se.printStackTrace();
+            System.out.println("Invalid Input. Please try again.");
         } catch(Exception e){
-            e.printStackTrace();
+            System.out.println("Invalid Input. Please try again.");
         }
         return s;
     }
@@ -231,9 +233,9 @@ public class Bookstore {
             status.next();
             q = status.getInt("quantity");
         } catch(SQLException se){
-            se.printStackTrace();
+            System.out.println("Invalid Input. Please try again.");
         } catch(Exception e){
-            e.printStackTrace();
+            System.out.println("Invalid Input. Please try again.");
         }
         return q;
     }
@@ -287,3 +289,4 @@ public class Bookstore {
         }
     }
 }
+
