@@ -55,8 +55,8 @@ public class BookSystem {
         String Book = "CREATE TABLE IF NOT EXISTS Book"+
             "(ISBN char(13),"+
             "title varchar(100) NOT NULL,"+
-            "unit_price integer NOT NULL,"+
-            "no_of_copies integer NOT NULL,"+
+            "unit_price integer,"+
+            "no_of_copies integer,"+
             "PRIMARY KEY (ISBN))";
 
         String Customer = "CREATE TABLE IF NOT EXISTS Customer"+
@@ -69,7 +69,7 @@ public class BookSystem {
         String Ordering = "CREATE TABLE IF NOT EXISTS Ordering"+
             "(order_id char(8),"+
             "ISBN char(13),"+
-            "quantity integer NOT NULL,"+
+            "quantity integer,"+
             "PRIMARY KEY (order_id, ISBN),"+
             "FOREIGN KEY (ISBN) REFERENCES Book(ISBN))";
         
@@ -77,7 +77,7 @@ public class BookSystem {
             "(order_id char(8),"+
             "o_date Date,"+
             "shipping_status char(1),"+
-            "charge integer NOT NULL,"+
+            "charge integer,"+
             "customer_id varchar(10) NOT NULL,"+
             "PRIMARY KEY (order_id),"+
             "FOREIGN KEY (order_id) REFERENCES Ordering(order_id),"+
@@ -131,6 +131,7 @@ public class BookSystem {
                 String file = folder_path + "/" + i;
                 BufferedReader br = new BufferedReader(new FileReader(file));
                 String CurrentLine;
+                //read the file line by line
                 while ((CurrentLine = br.readLine()) != null){
                     String[] columns = CurrentLine.split("\\|");
                     switch (i) {
@@ -218,6 +219,10 @@ public class BookSystem {
                 }catch (SQLException e){
                     System.out.println(e.getMessage());
                 }
+                if (latest_date == null){
+                    latest_date = Date.valueOf("1000-01-01");
+                    System.out.println("[Error] The lastest date in orders is NULL ");
+                }
                 try {
                     latest_date.toLocalDate();
                     System.out.println("Latest date in orders: "+latest_date);
@@ -232,6 +237,7 @@ public class BookSystem {
                     else if (date2.isAfter(system_date) == false || date2.isAfter(latest_date.toLocalDate())==false){
                         System.out.println("[Error] Invalid Input! It is set backward!");
                         correct_state=false;
+                        //handle the set backward error
                     }
                 } catch (Exception e) {
                     System.out.println("[Error] Invalid Input! It is set backward!");
@@ -242,6 +248,7 @@ public class BookSystem {
                    
             }catch(Exception e){
                 System.out.println("Incorrect format.");
+                //handle the incorrect format error
             }
 
         }      

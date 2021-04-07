@@ -38,6 +38,7 @@ public class Main {
             }else {
                 System.out.println("The System Date is now: "+BookSystem.system_date);
             }
+            //if the system date has not yet set, print 0000-00-00 as a temporary system date
             System.out.println("<This is the Book Ordering System.>");
             System.out.println("---------------------------------------");
             System.out.println("1. System interface.");
@@ -71,6 +72,7 @@ public class Main {
                 default:
                     System.out.println("[Error] Invalid Input! Please input 1 - 5!");
             }
+            //loop until valid input is made
         }  
             System.out.println("");
         
