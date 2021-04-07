@@ -83,6 +83,10 @@ public class Bookstore {
             // return the shipping status and quantity of the input order id
             status = ShippingStatus(oid);
             quan = OrderQuantity(oid);
+            if (status == 'E' || quan == -1 ){
+                oid = "EXIT";
+                break;
+            }
             System.out.println("the shipping status of " + oid + " is " + status + " and " + quan + " books ordered");
             if (!(status == 'N' && quan > 0))
                 System.out.println("[ERROR] Update is not allowed for this order. Please input another Order ID.");
@@ -131,7 +135,7 @@ public class Bookstore {
         Scanner nscanner = new Scanner (System.in);
         int n = nscanner.nextInt();
         while (n <= 0){
-            System.out.print("[ERROR] Invalid input. Please input a number larger than 0.");
+            System.out.print("[ERROR] Invalid input. Please input a number larger than 0: ");
             n = nscanner.nextInt();
         }
         // find the sum of ordered quantity of each book
@@ -217,9 +221,11 @@ public class Bookstore {
             status.next();
             s = status.getString("shipping_status").charAt(0);
         }  catch(SQLException se){
-            System.out.println("Invalid Input. Please try again.");
+            System.out.println("Invalid Order ID for update due to invalid shipping status. Please try again.");
+            s = 'E';
         } catch(Exception e){
-            System.out.println("Invalid Input. Please try again.");
+            System.out.println("Invalid Order ID for update due to invalid shipping status. Please try again.");
+            s = 'E';
         }
         return s;
     }
@@ -233,9 +239,11 @@ public class Bookstore {
             status.next();
             q = status.getInt("quantity");
         } catch(SQLException se){
-            System.out.println("Invalid Input. Please try again.");
+            System.out.println("Invalid Order ID for update due to invalid quantity. Please try again.");
+            q = -1;
         } catch(Exception e){
-            System.out.println("Invalid Input. Please try again.");
+            System.out.println("Invalid Order ID for update due to invalid quantity. Please try again.");
+            q = -1;
         }
         return q;
     }
