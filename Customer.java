@@ -90,7 +90,7 @@ public class Customer {
                                 int count_exist = crs.getInt(1);  //count_exist = count whether there is data that matches the search criteria
                                 if (count_exist > 0) {
                                     end1 = true;
-                                    String query = "SELECT * FROM Book WHERE ISBN = \"" + isbn + "\"";
+                                    String query = "SELECT * FROM Book WHERE ISBN = \"" + isbn + "\" ORDER BY title, ISBN";
                                     ResultSet rs = stmt.executeQuery(query);
                                     while (rs.next()){
                                         System.out.println("\nRecord "+ count);
@@ -138,7 +138,7 @@ public class Customer {
                                     int count_exist = crs.getInt(1);
                                     if (count_exist > 0) {
                                         end2 = true;
-                                        String query = "SELECT * FROM Book WHERE BINARY title = \"" + title + "\"";
+                                        String query = "SELECT * FROM Book WHERE BINARY title = \"" + title + "\" ORDER BY title, ISBN";
                                         ResultSet rs = stmt.executeQuery(query);
                                         while (rs.next()){
                                             System.out.println("Record " + count);
@@ -153,7 +153,7 @@ public class Customer {
                                             System.out.println("No Of Available:" + no_of_copies_q);
                                             
                                             Statement stmta = conn.createStatement();  //stmta = a new statement with query for book_author
-                                            String aquery = "SELECT author_name FROM Book_author WHERE ISBN = \"" + isbn_q + "\"";
+                                            String aquery = "SELECT author_name FROM Book_author WHERE ISBN = \"" + isbn_q + "\" ORDER BY author_name";
                                             System.out.println("Authors:");
                                             ResultSet ars = stmta.executeQuery(aquery);
                                             int count_author = 1;
@@ -175,7 +175,7 @@ public class Customer {
                                     int count_exist = crs.getInt(1);
                                     if (count_exist > 0) {
                                         end2 = true;
-                                        String query = "SELECT * FROM Book WHERE BINARY title Like \'" + title + "_\'";
+                                        String query = "SELECT * FROM Book WHERE BINARY title Like \'" + title + "_\' ORDER BY title, ISBN";
                                         ResultSet rs = stmt.executeQuery(query);
                                         while (rs.next()){
                                             System.out.println("Record " + count);
@@ -190,7 +190,7 @@ public class Customer {
                                             System.out.println("No Of Available:" + no_of_copies_q);
                                             
                                             Statement stmta = conn.createStatement();  //stmta = a new statement with query for book_author
-                                            String aquery = "SELECT author_name FROM Book_author WHERE ISBN = \"" + isbn_q + "\"";
+                                            String aquery = "SELECT author_name FROM Book_author WHERE ISBN = \"" + isbn_q + "\" ORDER BY author_name";
                                             System.out.println("Authors:");
                                             ResultSet ars = stmta.executeQuery(aquery);
                                             int count_author = 1;
@@ -213,7 +213,7 @@ public class Customer {
                                     int count_exist = crs.getInt(1);
                                     if (count_exist > 0) {
                                         end2 = true;
-                                        String query = "SELECT * FROM Book WHERE BINARY title = \"" + title + "\"";
+                                        String query = "SELECT * FROM Book WHERE BINARY title = \"" + title + "\" ORDER BY title, ISBN";
                                         ResultSet rs = stmt.executeQuery(query);
                                         while (rs.next()){
                                             System.out.println("Record " + count);
@@ -228,7 +228,7 @@ public class Customer {
                                             System.out.println("No Of Available:" + no_of_copies_q);
                                             
                                             Statement stmta = conn.createStatement();  //stmta = a new statement with query for book_author
-                                            String aquery = "SELECT author_name FROM Book_author WHERE ISBN = \"" + isbn_q + "\"";
+                                            String aquery = "SELECT author_name FROM Book_author WHERE ISBN = \"" + isbn_q + "\" ORDER BY author_name";
                                             System.out.println("Authors:");
                                             ResultSet ars = stmta.executeQuery(aquery);
                                             int count_author = 1;
@@ -246,7 +246,7 @@ public class Customer {
                                     int count_exist2 = crs2.getInt(1);
                                     if (count_exist2 > 0) {
                                         end2 = true;
-                                        String query = "SELECT * FROM Book WHERE BINARY title Like \'" + title + "_%\'";
+                                        String query = "SELECT * FROM Book WHERE BINARY title Like \'" + title + "_%\' ORDER BY title, ISBN";
                                         ResultSet rs = stmt.executeQuery(query);
                                         while (rs.next()){
                                             System.out.println("Record " + count);
@@ -261,7 +261,7 @@ public class Customer {
                                             System.out.println("No Of Available:" + no_of_copies_q);
                                             
                                             Statement stmta = conn.createStatement();  //stmta = a new statement with query for book_author
-                                            String aquery = "SELECT author_name FROM Book_author WHERE ISBN = \"" + isbn_q + "\"";
+                                            String aquery = "SELECT author_name FROM Book_author WHERE ISBN = \"" + isbn_q + "\" ORDER BY author_name";
                                             System.out.println("Authors:");
                                             ResultSet ars = stmta.executeQuery(aquery);
                                             int count_author = 1;
@@ -286,7 +286,7 @@ public class Customer {
                                     int count_exist = crs.getInt(1);
                                     if (count_exist > 0) {
                                         end2 = true;
-                                        String query = "SELECT * FROM Book WHERE BINARY title Like \'_" + title + "\'";
+                                        String query = "SELECT * FROM Book WHERE BINARY title Like \'_" + title + "\' ORDER BY title, ISBN";
                                         ResultSet rs = stmt.executeQuery(query);
                                         while (rs.next()){
                                             System.out.println("Record " + count);
@@ -301,7 +301,7 @@ public class Customer {
                                             System.out.println("No Of Available:" + no_of_copies_q);
                                             
                                             Statement stmta = conn.createStatement();  //stmta = a new statement with query for book_author
-                                            String aquery = "SELECT author_name FROM Book_author WHERE ISBN = \"" + isbn_q + "\"";
+                                            String aquery = "SELECT author_name FROM Book_author WHERE ISBN = \"" + isbn_q + "\" ORDER BY author_name";
                                             System.out.println("Authors:");
                                             ResultSet ars = stmta.executeQuery(aquery);
                                             int count_author = 1;
@@ -325,7 +325,7 @@ public class Customer {
                                     int count_exist = crs.getInt(1);
                                     if (count_exist > 0) {
                                         end2 = true;
-                                        String query = "SELECT * FROM Book WHERE BINARY title Like \'_" + title + "_\'";
+                                        String query = "SELECT * FROM Book WHERE BINARY title Like \'_" + title + "_\' ORDER BY title, ISBN";
                                         ResultSet rs = stmt.executeQuery(query);
                                         while (rs.next()){
                                             System.out.println("Record " + count);
@@ -340,7 +340,7 @@ public class Customer {
                                             System.out.println("No Of Available:" + no_of_copies_q);
                                             
                                             Statement stmta = conn.createStatement();  //stmta = a new statement with query for book_author
-                                            String aquery = "SELECT author_name FROM Book_author WHERE ISBN = \"" + isbn_q + "\"";
+                                            String aquery = "SELECT author_name FROM Book_author WHERE ISBN = \"" + isbn_q + "\" ORDER BY author_name";
                                             System.out.println("Authors:");
                                             ResultSet ars = stmta.executeQuery(aquery);
                                             int count_author = 1;
@@ -363,7 +363,7 @@ public class Customer {
                                     int count_exist = crs.getInt(1);
                                     if (count_exist > 0) {
                                         end2 = true;
-                                        String query = "SELECT * FROM Book WHERE BINARY title Like \'_" + title + "\'";
+                                        String query = "SELECT * FROM Book WHERE BINARY title Like \'_" + title + "\' ORDER BY title, ISBN";
                                         ResultSet rs = stmt.executeQuery(query);
                                         while (rs.next()){
                                             System.out.println("Record " + count);
@@ -378,7 +378,7 @@ public class Customer {
                                             System.out.println("No Of Available:" + no_of_copies_q);
                                             
                                             Statement stmta = conn.createStatement();  //stmta = a new statement with query for book_author
-                                            String aquery = "SELECT author_name FROM Book_author WHERE ISBN = \"" + isbn_q + "\"";
+                                            String aquery = "SELECT author_name FROM Book_author WHERE ISBN = \"" + isbn_q + "\" ORDER BY author_name";
                                             System.out.println("Authors:");
                                             ResultSet ars = stmta.executeQuery(aquery);
                                             int count_author = 1;
@@ -398,7 +398,7 @@ public class Customer {
                                     int count_exist2 = crs2.getInt(1);
                                     if (count_exist2 > 0) {
                                         end2 = true;
-                                        String query = "SELECT * FROM Book WHERE BINARY title Like \'_" + title + "_%\'";
+                                        String query = "SELECT * FROM Book WHERE BINARY title Like \'_" + title + "_%\' ORDER BY title, ISBN";
                                         ResultSet rs = stmt.executeQuery(query);
                                         while (rs.next()){
                                             System.out.println("Record " + count);
@@ -413,7 +413,7 @@ public class Customer {
                                             System.out.println("No Of Available:" + no_of_copies_q);
                                             
                                             Statement stmta = conn.createStatement();  //stmta = a new statement with query for book_author
-                                            String aquery = "SELECT author_name FROM Book_author WHERE ISBN = \"" + isbn_q + "\"";
+                                            String aquery = "SELECT author_name FROM Book_author WHERE ISBN = \"" + isbn_q + "\" ORDER BY author_name";
                                             System.out.println("Authors:");
                                             ResultSet ars = stmta.executeQuery(aquery);
                                             int count_author = 1;
@@ -438,7 +438,7 @@ public class Customer {
                                     int count_exist = crs.getInt(1);
                                     if (count_exist > 0) {
                                         end2 = true;
-                                        String query = "SELECT * FROM Book WHERE BINARY title = \"" + title + "\"";
+                                        String query = "SELECT * FROM Book WHERE BINARY title = \"" + title + "\" ORDER BY title, ISBN";
                                         ResultSet rs = stmt.executeQuery(query);
                                         while (rs.next()){
                                             System.out.println("Record " + count);
@@ -453,7 +453,7 @@ public class Customer {
                                             System.out.println("No Of Available:" + no_of_copies_q);
                                             
                                             Statement stmta = conn.createStatement();  //stmta = a new statement with query for book_author
-                                            String aquery = "SELECT author_name FROM Book_author WHERE ISBN = \"" + isbn_q + "\"";
+                                            String aquery = "SELECT author_name FROM Book_author WHERE ISBN = \"" + isbn_q + "\" ORDER BY author_name";
                                             System.out.println("Authors:");
                                             ResultSet ars = stmta.executeQuery(aquery);
                                             int count_author = 1;
@@ -471,7 +471,7 @@ public class Customer {
                                     int count_exist2 = crs2.getInt(1);
                                     if (count_exist2 > 0) {
                                         end2 = true;
-                                        String query = "SELECT * FROM Book WHERE BINARY title Like \'_%" + title + "\'";
+                                        String query = "SELECT * FROM Book WHERE BINARY title Like \'_%" + title + "\' ORDER BY title, ISBN";
                                         ResultSet rs = stmt.executeQuery(query);
                                         while (rs.next()){
                                             System.out.println("Record " + count);
@@ -486,7 +486,7 @@ public class Customer {
                                             System.out.println("No Of Available:" + no_of_copies_q);
                                             
                                             Statement stmta = conn.createStatement();  //stmta = a new statement with query for book_author
-                                            String aquery = "SELECT author_name FROM Book_author WHERE ISBN = \"" + isbn_q + "\"";
+                                            String aquery = "SELECT author_name FROM Book_author WHERE ISBN = \"" + isbn_q + "\" ORDER BY author_name";
                                             System.out.println("Authors:");
                                             ResultSet ars = stmta.executeQuery(aquery);
                                             int count_author = 1;
@@ -509,7 +509,7 @@ public class Customer {
                                     int count_exist = crs.getInt(1);
                                     if (count_exist > 0) {
                                         end2 = true;
-                                        String query = "SELECT * FROM Book WHERE BINARY title LIKE \'" + title + "_\'";
+                                        String query = "SELECT * FROM Book WHERE BINARY title LIKE \'" + title + "_\' ORDER BY title, ISBN";
                                         ResultSet rs = stmt.executeQuery(query);
                                         while (rs.next()){
                                             System.out.println("Record " + count);
@@ -524,7 +524,7 @@ public class Customer {
                                             System.out.println("No Of Available:" + no_of_copies_q);
                                             
                                             Statement stmta = conn.createStatement();  //stmta = a new statement with query for book_author
-                                            String aquery = "SELECT author_name FROM Book_author WHERE ISBN = \"" + isbn_q + "\"";
+                                            String aquery = "SELECT author_name FROM Book_author WHERE ISBN = \"" + isbn_q + "\" ORDER BY author_name";
                                             System.out.println("Authors:");
                                             ResultSet ars = stmta.executeQuery(aquery);
                                             int count_author = 1;
@@ -542,7 +542,7 @@ public class Customer {
                                     int count_exist2 = crs2.getInt(1);
                                     if (count_exist2 > 0) {
                                         end2 = true;
-                                        String query = "SELECT * FROM Book WHERE BINARY title Like \'_%" + title + "_\'";
+                                        String query = "SELECT * FROM Book WHERE BINARY title Like \'_%" + title + "_\' ORDER BY title, ISBN";
                                         ResultSet rs = stmt.executeQuery(query);
                                         while (rs.next()){
                                             System.out.println("Record " + count);
@@ -557,7 +557,7 @@ public class Customer {
                                             System.out.println("No Of Available:" + no_of_copies_q);
                                             
                                             Statement stmta = conn.createStatement();  //stmta = a new statement with query for book_author
-                                            String aquery = "SELECT author_name FROM Book_author WHERE ISBN = \"" + isbn_q + "\"";
+                                            String aquery = "SELECT author_name FROM Book_author WHERE ISBN = \"" + isbn_q + "\" ORDER BY author_name";
                                             System.out.println("Authors:");
                                             ResultSet ars = stmta.executeQuery(aquery);
                                             int count_author = 1;
@@ -580,7 +580,7 @@ public class Customer {
                                     int count_exist = crs.getInt(1);
                                     if (count_exist > 0) {
                                         end2 = true;
-                                        String query = "SELECT * FROM Book WHERE BINARY title = \"" + title + "\"";
+                                        String query = "SELECT * FROM Book WHERE BINARY title = \"" + title + "\" ORDER BY title, ISBN";
                                         ResultSet rs = stmt.executeQuery(query);
                                         while (rs.next()){
                                             System.out.println("Record " + count);
@@ -595,7 +595,7 @@ public class Customer {
                                             System.out.println("No Of Available:" + no_of_copies_q);
                                             
                                             Statement stmta = conn.createStatement();  //stmta = a new statement with query for book_author
-                                            String aquery = "SELECT author_name FROM Book_author WHERE ISBN = \"" + isbn_q + "\"";
+                                            String aquery = "SELECT author_name FROM Book_author WHERE ISBN = \"" + isbn_q + "\" ORDER BY author_name";
                                             System.out.println("Authors:");
                                             ResultSet ars = stmta.executeQuery(aquery);
                                             int count_author = 1;
@@ -613,7 +613,7 @@ public class Customer {
                                     int count_exist2 = crs2.getInt(1);
                                     if (count_exist2 > 0) {
                                         end2 = true;
-                                        String query = "SELECT * FROM Book WHERE BINARY title Like \'" + title + "_%\'";
+                                        String query = "SELECT * FROM Book WHERE BINARY title Like \'" + title + "_%\' ORDER BY title, ISBN";
                                         ResultSet rs = stmt.executeQuery(query);
                                         while (rs.next()){
                                             System.out.println("Record " + count);
@@ -628,7 +628,7 @@ public class Customer {
                                             System.out.println("No Of Available:" + no_of_copies_q);
                                             
                                             Statement stmta = conn.createStatement();  //stmta = a new statement with query for book_author
-                                            String aquery = "SELECT author_name FROM Book_author WHERE ISBN = \"" + isbn_q + "\"";
+                                            String aquery = "SELECT author_name FROM Book_author WHERE ISBN = \"" + isbn_q + "\" ORDER BY author_name";
                                             System.out.println("Authors:");
                                             ResultSet ars = stmta.executeQuery(aquery);
                                             int count_author = 1;
@@ -646,7 +646,7 @@ public class Customer {
                                     int count_exist3 = crs3.getInt(1);
                                     if (count_exist3 > 0) {
                                         end2 = true;
-                                        String query = "SELECT * FROM Book WHERE BINARY title Like \'_%" + title + "\'";
+                                        String query = "SELECT * FROM Book WHERE BINARY title Like \'_%" + title + "\' ORDER BY title, ISBN";
                                         ResultSet rs = stmt.executeQuery(query);
                                         while (rs.next()){
                                             System.out.println("Record " + count);
@@ -661,7 +661,7 @@ public class Customer {
                                             System.out.println("No Of Available:" + no_of_copies_q);
                                             
                                             Statement stmta = conn.createStatement();  //stmta = a new statement with query for book_author
-                                            String aquery = "SELECT author_name FROM Book_author WHERE ISBN = \"" + isbn_q + "\"";
+                                            String aquery = "SELECT author_name FROM Book_author WHERE ISBN = \"" + isbn_q + "\" ORDER BY author_name";
                                             System.out.println("Authors:");
                                             ResultSet ars = stmta.executeQuery(aquery);
                                             int count_author = 1;
@@ -679,7 +679,7 @@ public class Customer {
                                     int count_exist4 = crs4.getInt(1);
                                     if (count_exist4 > 0) {
                                         end2 = true;
-                                        String query = "SELECT * FROM Book WHERE BINARY title Like \'_%" + title + "_%\'";
+                                        String query = "SELECT * FROM Book WHERE BINARY title Like \'_%" + title + "_%\' ORDER BY title, ISBN";
                                         ResultSet rs = stmt.executeQuery(query);
                                         while (rs.next()){
                                             System.out.println("Record " + count);
@@ -694,7 +694,7 @@ public class Customer {
                                             System.out.println("No Of Available:" + no_of_copies_q);
                                             
                                             Statement stmta = conn.createStatement();  //stmta = a new statement with query for book_author
-                                            String aquery = "SELECT author_name FROM Book_author WHERE ISBN = \"" + isbn_q + "\"";
+                                            String aquery = "SELECT author_name FROM Book_author WHERE ISBN = \"" + isbn_q + "\" ORDER BY author_name";
                                             System.out.println("Authors:");
                                             ResultSet ars = stmta.executeQuery(aquery);
                                             int count_author = 1;
@@ -730,7 +730,7 @@ public class Customer {
                                     int count_exist = crs.getInt(1);
                                     if (count_exist > 0) {
                                         end3 = true;
-                                        String query = "SELECT * FROM Book WHERE ISBN IN (SELECT ISBN FROM Book_author WHERE BINARY author_name = \"" + author + "\")";
+                                        String query = "SELECT * FROM Book WHERE ISBN IN (SELECT ISBN FROM Book_author WHERE BINARY author_name = \"" + author + "\") ORDER BY title, ISBN";
                                         ResultSet rs = stmt.executeQuery(query);
                                         //System.out.println("\nRecord "+ count);
                                         while (rs.next()){
@@ -746,7 +746,7 @@ public class Customer {
                                             System.out.println("No Of Available:" + no_of_copies_q);
                                             
                                             Statement stmta = conn.createStatement();  //stmta = a new statement with query for book_author
-                                            String aquery = "SELECT author_name FROM Book_author WHERE ISBN = \"" + isbn_q + "\"";
+                                            String aquery = "SELECT author_name FROM Book_author WHERE ISBN = \"" + isbn_q + "\" ORDER BY author_name";
                                             System.out.println("Authors:");
                                             ResultSet ars = stmta.executeQuery(aquery);
                                             int count_author = 1;
@@ -769,7 +769,7 @@ public class Customer {
                                     int count_exist = crs.getInt(1);
                                     if (count_exist > 0) {
                                         end3 = true;
-                                        String query = "SELECT * FROM Book WHERE ISBN IN (SELECT ISBN FROM Book_author WHERE BINARY author_name Like \'" + author + "_\')";
+                                        String query = "SELECT * FROM Book WHERE ISBN IN (SELECT ISBN FROM Book_author WHERE BINARY author_name Like \'" + author + "_\') ORDER BY title, ISBN";
                                         ResultSet rs = stmt.executeQuery(query);
                                         //System.out.println("\nRecord "+ count);
                                         while (rs.next()){
@@ -785,7 +785,7 @@ public class Customer {
                                             System.out.println("No Of Available:" + no_of_copies_q);
                                             
                                             Statement stmta = conn.createStatement();  //stmta = a new statement with query for book_author
-                                            String aquery = "SELECT author_name FROM Book_author WHERE ISBN = \"" + isbn_q + "\"";
+                                            String aquery = "SELECT author_name FROM Book_author WHERE ISBN = \"" + isbn_q + "\" ORDER BY author_name";
                                             System.out.println("Authors:");
                                             ResultSet ars = stmta.executeQuery(aquery);
                                             int count_author = 1;
@@ -809,7 +809,7 @@ public class Customer {
                                     int count_exist = crs.getInt(1);
                                     if (count_exist > 0) {
                                         end3 = true;
-                                        String query = "SELECT * FROM Book WHERE ISBN IN (SELECT ISBN FROM Book_author WHERE BINARY author_name = \"" + author + "\")";
+                                        String query = "SELECT * FROM Book WHERE ISBN IN (SELECT ISBN FROM Book_author WHERE BINARY author_name = \"" + author + "\") ORDER BY title, ISBN";
                                         ResultSet rs = stmt.executeQuery(query);
                                         //System.out.println("\nRecord "+ count);
                                         while (rs.next()){
@@ -825,7 +825,7 @@ public class Customer {
                                             System.out.println("No Of Available:" + no_of_copies_q);
                                             
                                             Statement stmta = conn.createStatement();  //stmta = a new statement with query for book_author
-                                            String aquery = "SELECT author_name FROM Book_author WHERE ISBN = \"" + isbn_q + "\"";
+                                            String aquery = "SELECT author_name FROM Book_author WHERE ISBN = \"" + isbn_q + "\" ORDER BY author_name";
                                             System.out.println("Authors:");
                                             ResultSet ars = stmta.executeQuery(aquery);
                                             int count_author = 1;
@@ -845,7 +845,7 @@ public class Customer {
                                     int count_exist2 = crs2.getInt(1);
                                     if (count_exist2 > 0) {
                                         end3 = true;
-                                        String query = "SELECT * FROM Book WHERE ISBN IN (SELECT ISBN FROM Book_author WHERE BINARY author_name Like \'" + author + "_%\')";
+                                        String query = "SELECT * FROM Book WHERE ISBN IN (SELECT ISBN FROM Book_author WHERE BINARY author_name Like \'" + author + "_%\') ORDER BY title, ISBN";
                                         ResultSet rs = stmt.executeQuery(query);
                                         //System.out.println("\nRecord "+ count);
                                         while (rs.next()){
@@ -861,7 +861,7 @@ public class Customer {
                                             System.out.println("No Of Available:" + no_of_copies_q);
                                             
                                             Statement stmta = conn.createStatement();  //stmta = a new statement with query for book_author
-                                            String aquery = "SELECT author_name FROM Book_author WHERE ISBN = \"" + isbn_q + "\"";
+                                            String aquery = "SELECT author_name FROM Book_author WHERE ISBN = \"" + isbn_q + "\" ORDER BY author_name";
                                             System.out.println("Authors:");
                                             ResultSet ars = stmta.executeQuery(aquery);
                                             int count_author = 1;
@@ -888,7 +888,7 @@ public class Customer {
                                     int count_exist = crs.getInt(1);
                                     if (count_exist > 0) {
                                         end3 = true;
-                                        String query = "SELECT * FROM Book WHERE ISBN IN (SELECT ISBN FROM Book_author WHERE BINARY author_name Like \'_" + author + "\')";
+                                        String query = "SELECT * FROM Book WHERE ISBN IN (SELECT ISBN FROM Book_author WHERE BINARY author_name Like \'_" + author + "\') ORDER BY title, ISBN";
                                         ResultSet rs = stmt.executeQuery(query);
                                         //System.out.println("\nRecord "+ count);
                                         while (rs.next()){
@@ -904,7 +904,7 @@ public class Customer {
                                             System.out.println("No Of Available:" + no_of_copies_q);
                                             
                                             Statement stmta = conn.createStatement();  //stmta = a new statement with query for book_author
-                                            String aquery = "SELECT author_name FROM Book_author WHERE ISBN = \"" + isbn_q + "\"";
+                                            String aquery = "SELECT author_name FROM Book_author WHERE ISBN = \"" + isbn_q + "\" ORDER BY author_name";
                                             System.out.println("Authors:");
                                             ResultSet ars = stmta.executeQuery(aquery);
                                             int count_author = 1;
@@ -927,7 +927,7 @@ public class Customer {
                                     int count_exist = crs.getInt(1);
                                     if (count_exist > 0) {
                                         end3 = true;
-                                        String query = "SELECT * FROM Book WHERE ISBN IN (SELECT ISBN FROM Book_author WHERE BINARY author_name Like \'_" + author + "_\')";
+                                        String query = "SELECT * FROM Book WHERE ISBN IN (SELECT ISBN FROM Book_author WHERE BINARY author_name Like \'_" + author + "_\') ORDER BY title, ISBN";
                                         ResultSet rs = stmt.executeQuery(query);
                                         //System.out.println("\nRecord "+ count);
                                         while (rs.next()){
@@ -943,7 +943,7 @@ public class Customer {
                                             System.out.println("No Of Available:" + no_of_copies_q);
                                             
                                             Statement stmta = conn.createStatement();  //stmta = a new statement with query for book_author
-                                            String aquery = "SELECT author_name FROM Book_author WHERE ISBN = \"" + isbn_q + "\"";
+                                            String aquery = "SELECT author_name FROM Book_author WHERE ISBN = \"" + isbn_q + "\" ORDER BY author_name";
                                             System.out.println("Authors:");
                                             ResultSet ars = stmta.executeQuery(aquery);
                                             int count_author = 1;
@@ -967,7 +967,7 @@ public class Customer {
                                     int count_exist = crs.getInt(1);
                                     if (count_exist > 0) {
                                         end3 = true;
-                                        String query = "SELECT * FROM Book WHERE ISBN IN (SELECT ISBN FROM Book_author WHERE BINARY author_name Like \'_" + author + "\')";
+                                        String query = "SELECT * FROM Book WHERE ISBN IN (SELECT ISBN FROM Book_author WHERE BINARY author_name Like \'_" + author + "\') ORDER BY title, ISBN";
                                         ResultSet rs = stmt.executeQuery(query);
                                         //System.out.println("\nRecord "+ count);
                                         while (rs.next()){
@@ -983,7 +983,7 @@ public class Customer {
                                             System.out.println("No Of Available:" + no_of_copies_q);
                                             
                                             Statement stmta = conn.createStatement();  //stmta = a new statement with query for book_author
-                                            String aquery = "SELECT author_name FROM Book_author WHERE ISBN = \"" + isbn_q + "\"";
+                                            String aquery = "SELECT author_name FROM Book_author WHERE ISBN = \"" + isbn_q + "\" ORDER BY author_name";
                                             System.out.println("Authors:");
                                             ResultSet ars = stmta.executeQuery(aquery);
                                             int count_author = 1;
@@ -1004,7 +1004,7 @@ public class Customer {
                                     int count_exist2 = crs2.getInt(1);
                                     if (count_exist2 > 0) {
                                         end3 = true;
-                                        String query = "SELECT * FROM Book WHERE ISBN IN (SELECT ISBN FROM Book_author WHERE BINARY author_name Like \'_" + author + "_%\')";
+                                        String query = "SELECT * FROM Book WHERE ISBN IN (SELECT ISBN FROM Book_author WHERE BINARY author_name Like \'_" + author + "_%\') ORDER BY title, ISBN";
                                         ResultSet rs = stmt.executeQuery(query);
                                         //System.out.println("\nRecord "+ count);
                                         while (rs.next()){
@@ -1020,7 +1020,7 @@ public class Customer {
                                             System.out.println("No Of Available:" + no_of_copies_q);
                                             
                                             Statement stmta = conn.createStatement();  //stmta = a new statement with query for book_author
-                                            String aquery = "SELECT author_name FROM Book_author WHERE ISBN = \"" + isbn_q + "\"";
+                                            String aquery = "SELECT author_name FROM Book_author WHERE ISBN = \"" + isbn_q + "\" ORDER BY author_name";
                                             System.out.println("Authors:");
                                             ResultSet ars = stmta.executeQuery(aquery);
                                             int count_author = 1;
@@ -1047,7 +1047,7 @@ public class Customer {
                                     int count_exist = crs.getInt(1);
                                     if (count_exist > 0) {
                                         end3 = true;
-                                        String query = "SELECT * FROM Book WHERE ISBN IN (SELECT ISBN FROM Book_author WHERE BINARY author_name = \"" + author + "\")";
+                                        String query = "SELECT * FROM Book WHERE ISBN IN (SELECT ISBN FROM Book_author WHERE BINARY author_name = \"" + author + "\") ORDER BY title, ISBN";
                                         ResultSet rs = stmt.executeQuery(query);
                                         //System.out.println("\nRecord "+ count);
                                         while (rs.next()){
@@ -1063,7 +1063,7 @@ public class Customer {
                                             System.out.println("No Of Available:" + no_of_copies_q);
                                             
                                             Statement stmta = conn.createStatement();  //stmta = a new statement with query for book_author
-                                            String aquery = "SELECT author_name FROM Book_author WHERE ISBN = \"" + isbn_q + "\"";
+                                            String aquery = "SELECT author_name FROM Book_author WHERE ISBN = \"" + isbn_q + "\" ORDER BY author_name";
                                             System.out.println("Authors:");
                                             ResultSet ars = stmta.executeQuery(aquery);
                                             int count_author = 1;
@@ -1083,7 +1083,7 @@ public class Customer {
                                     int count_exist2 = crs2.getInt(1);
                                     if (count_exist2 > 0) {
                                         end3 = true;
-                                        String query = "SELECT * FROM Book WHERE ISBN IN (SELECT ISBN FROM Book_author WHERE BINARY author_name Like \'_%" + author + "\')";
+                                        String query = "SELECT * FROM Book WHERE ISBN IN (SELECT ISBN FROM Book_author WHERE BINARY author_name Like \'_%" + author + "\') ORDER BY title, ISBN";
                                         ResultSet rs = stmt.executeQuery(query);
                                         //System.out.println("\nRecord "+ count);
                                         while (rs.next()){
@@ -1099,7 +1099,7 @@ public class Customer {
                                             System.out.println("No Of Available:" + no_of_copies_q);
                                             
                                             Statement stmta = conn.createStatement();  //stmta = a new statement with query for book_author
-                                            String aquery = "SELECT author_name FROM Book_author WHERE ISBN = \"" + isbn_q + "\"";
+                                            String aquery = "SELECT author_name FROM Book_author WHERE ISBN = \"" + isbn_q + "\" ORDER BY author_name";
                                             System.out.println("Authors:");
                                             ResultSet ars = stmta.executeQuery(aquery);
                                             int count_author = 1;
@@ -1124,7 +1124,7 @@ public class Customer {
                                     int count_exist = crs.getInt(1);
                                     if (count_exist > 0) {
                                         end3 = true;
-                                        String query = "SELECT * FROM Book WHERE ISBN IN (SELECT ISBN FROM Book_author WHERE BINARY author_name Like \'" + author + "_\')";
+                                        String query = "SELECT * FROM Book WHERE ISBN IN (SELECT ISBN FROM Book_author WHERE BINARY author_name Like \'" + author + "_\') ORDER BY title, ISBN";
                                         ResultSet rs = stmt.executeQuery(query);
                                         //System.out.println("\nRecord "+ count);
                                         while (rs.next()){
@@ -1140,7 +1140,7 @@ public class Customer {
                                             System.out.println("No Of Available:" + no_of_copies_q);
                                             
                                             Statement stmta = conn.createStatement();  //stmta = a new statement with query for book_author
-                                            String aquery = "SELECT author_name FROM Book_author WHERE ISBN = \"" + isbn_q + "\"";
+                                            String aquery = "SELECT author_name FROM Book_author WHERE ISBN = \"" + isbn_q + "\" ORDER BY author_name";
                                             System.out.println("Authors:");
                                             ResultSet ars = stmta.executeQuery(aquery);
                                             int count_author = 1;
@@ -1161,7 +1161,7 @@ public class Customer {
                                     int count_exist2 = crs2.getInt(1);
                                     if (count_exist2 > 0) {
                                         end3 = true;
-                                        String query = "SELECT * FROM Book WHERE ISBN IN (SELECT ISBN FROM Book_author WHERE BINARY author_name Like \'_%" + author + "_\')";
+                                        String query = "SELECT * FROM Book WHERE ISBN IN (SELECT ISBN FROM Book_author WHERE BINARY author_name Like \'_%" + author + "_\') ORDER BY title, ISBN";
                                         ResultSet rs = stmt.executeQuery(query);
                                         //System.out.println("\nRecord "+ count);
                                         while (rs.next()){
@@ -1177,7 +1177,7 @@ public class Customer {
                                             System.out.println("No Of Available:" + no_of_copies_q);
                                             
                                             Statement stmta = conn.createStatement();  //stmta = a new statement with query for book_author
-                                            String aquery = "SELECT author_name FROM Book_author WHERE ISBN = \"" + isbn_q + "\"";
+                                            String aquery = "SELECT author_name FROM Book_author WHERE ISBN = \"" + isbn_q + "\" ORDER BY author_name";
                                             System.out.println("Authors:");
                                             ResultSet ars = stmta.executeQuery(aquery);
                                             int count_author = 1;
@@ -1205,7 +1205,7 @@ public class Customer {
                                     int count_exist = crs.getInt(1);
                                     if (count_exist > 0) {
                                         end3 = true;
-                                        String query = "SELECT * FROM Book WHERE ISBN IN (SELECT ISBN FROM Book_author WHERE BINARY author_name = \"" + author + "\")";
+                                        String query = "SELECT * FROM Book WHERE ISBN IN (SELECT ISBN FROM Book_author WHERE BINARY author_name = \"" + author + "\") ORDER BY title, ISBN";
                                         ResultSet rs = stmt.executeQuery(query);
                                         //System.out.println("\nRecord "+ count);
                                         while (rs.next()){
@@ -1221,7 +1221,7 @@ public class Customer {
                                             System.out.println("No Of Available:" + no_of_copies_q);
                                             
                                             Statement stmta = conn.createStatement();  //stmta = a new statement with query for book_author
-                                            String aquery = "SELECT author_name FROM Book_author WHERE ISBN = \"" + isbn_q + "\"";
+                                            String aquery = "SELECT author_name FROM Book_author WHERE ISBN = \"" + isbn_q + "\" ORDER BY author_name";
                                             System.out.println("Authors:");
                                             ResultSet ars = stmta.executeQuery(aquery);
                                             int count_author = 1;
@@ -1241,7 +1241,7 @@ public class Customer {
                                     int count_exist2 = crs2.getInt(1);
                                     if (count_exist2 > 0) {
                                         end3 = true;
-                                        String query = "SELECT * FROM Book WHERE ISBN IN (SELECT ISBN FROM Book_author WHERE BINARY author_name Like \'" + author + "_%\')";
+                                        String query = "SELECT * FROM Book WHERE ISBN IN (SELECT ISBN FROM Book_author WHERE BINARY author_name Like \'" + author + "_%\') ORDER BY title, ISBN";
                                         ResultSet rs = stmt.executeQuery(query);
                                         //System.out.println("\nRecord "+ count);
                                         while (rs.next()){
@@ -1257,7 +1257,7 @@ public class Customer {
                                             System.out.println("No Of Available:" + no_of_copies_q);
                                             
                                             Statement stmta = conn.createStatement();  //stmta = a new statement with query for book_author
-                                            String aquery = "SELECT author_name FROM Book_author WHERE ISBN = \"" + isbn_q + "\"";
+                                            String aquery = "SELECT author_name FROM Book_author WHERE ISBN = \"" + isbn_q + "\" ORDER BY author_name";
                                             System.out.println("Authors:");
                                             ResultSet ars = stmta.executeQuery(aquery);
                                             int count_author = 1;
@@ -1277,7 +1277,7 @@ public class Customer {
                                     int count_exist3 = crs3.getInt(1);
                                     if (count_exist3 > 0) {
                                         end3 = true;
-                                        String query = "SELECT * FROM Book WHERE ISBN IN (SELECT ISBN FROM Book_author WHERE BINARY author_name Like \'_%" + author + "_%\')";
+                                        String query = "SELECT * FROM Book WHERE ISBN IN (SELECT ISBN FROM Book_author WHERE BINARY author_name Like \'_%" + author + "_%\') ORDER BY title, ISBN";
                                         ResultSet rs = stmt.executeQuery(query);
                                         //System.out.println("\nRecord "+ count);
                                         while (rs.next()){
@@ -1293,7 +1293,7 @@ public class Customer {
                                             System.out.println("No Of Available:" + no_of_copies_q);
                                             
                                             Statement stmta = conn.createStatement();  //stmta = a new statement with query for book_author
-                                            String aquery = "SELECT author_name FROM Book_author WHERE ISBN = \"" + isbn_q + "\"";
+                                            String aquery = "SELECT author_name FROM Book_author WHERE ISBN = \"" + isbn_q + "\" ORDER BY author_name";
                                             System.out.println("Authors:");
                                             ResultSet ars = stmta.executeQuery(aquery);
                                             int count_author = 1;
@@ -1314,7 +1314,7 @@ public class Customer {
                                     int count_exist4 = crs4.getInt(1);
                                     if (count_exist4 > 0) {
                                         end3 = true;
-                                        String query = "SELECT * FROM Book WHERE ISBN IN (SELECT ISBN FROM Book_author WHERE BINARY author_name Like \'_%" + author + "_%\')";
+                                        String query = "SELECT * FROM Book WHERE ISBN IN (SELECT ISBN FROM Book_author WHERE BINARY author_name Like \'_%" + author + "_%\') ORDER BY title, ISBN";
                                         ResultSet rs = stmt.executeQuery(query);
                                         //System.out.println("\nRecord "+ count);
                                         while (rs.next()){
@@ -1330,7 +1330,7 @@ public class Customer {
                                             System.out.println("No Of Available:" + no_of_copies_q);
                                             
                                             Statement stmta = conn.createStatement();  //stmta = a new statement with query for book_author
-                                            String aquery = "SELECT author_name FROM Book_author WHERE ISBN = \"" + isbn_q + "\"";
+                                            String aquery = "SELECT author_name FROM Book_author WHERE ISBN = \"" + isbn_q + "\" ORDER BY author_name" ;
                                             System.out.println("Authors:");
                                             ResultSet ars = stmta.executeQuery(aquery);
                                             int count_author = 1;

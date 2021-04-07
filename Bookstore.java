@@ -178,7 +178,7 @@ public class Bookstore {
         // print the books with details
         System.out.println("ISBN            Title             copies");
         try{
-            String popularSQL = "SELECT O.ISBN, B.title, SUM(O.quantity) FROM Ordering O, Book B WHERE O.ISBN=B.ISBN GROUP BY O.ISBN ORDER BY SUM(O.quantity) DESC";
+            String popularSQL = "SELECT O.ISBN, B.title, SUM(O.quantity) FROM Ordering O, Book B WHERE O.ISBN=B.ISBN GROUP BY O.ISBN ORDER BY SUM(O.quantity) DESC, B.title, O.ISBN";
             Statement stmt = conn.createStatement();
             ResultSet popularList = stmt.executeQuery(popularSQL);
             while (popularList.next()){
