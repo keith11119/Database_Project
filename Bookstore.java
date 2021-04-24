@@ -63,7 +63,7 @@ public class Bookstore {
     private static void OrderUpdate(){
         int quan;
         char status, updateYN;
-        String oid;
+        String oid, inputYN;
         System.out.print("Please input the order ID: ");
         // check if the input order can be updated
         do{
@@ -83,6 +83,10 @@ public class Bookstore {
             // return the shipping status and quantity of the input order id
             status = ShippingStatus(oid);
             quan = OrderQuantity(oid);
+            if (status == 'E' || quan == -1 ){
+                oid = "EXIT";
+                break;
+            }
             System.out.println("the shipping status of " + oid + " is " + status + " and " + quan + " books ordered");
             if (!(status == 'N' && quan > 0))
                 System.out.println("[ERROR] Update is not allowed for this order. Please input another Order ID.");
@@ -93,7 +97,12 @@ public class Bookstore {
             System.out.print("Are you sure to update the shipping status? (Yes=Y) ");
             do{
                 Scanner YNscanner = new Scanner (System.in);
-                updateYN = YNscanner.next().charAt(0);
+                inputYN = YNscanner.next();
+                while (!(inputYN.length() == 1)){
+                    System.out.print("Invalid Input. Please try again (Y or N): ");
+                    inputYN = YNscanner.next();
+                }
+                updateYN = inputYN.charAt(1);
                 if (!(updateYN == 'Y' || updateYN == 'N'))
                     System.out.println("[ERROR] Invalid input. Please input Y or N.");
             } while (!(updateYN == 'Y' || updateYN == 'N'));
@@ -131,7 +140,7 @@ public class Bookstore {
         Scanner nscanner = new Scanner (System.in);
         int n = nscanner.nextInt();
         while (n <= 0){
-            System.out.print("[ERROR] Invalid input. Please input a number larger than 0.");
+            System.out.print("[ERROR] Invalid input. Please input a number larger than 0: ");
             n = nscanner.nextInt();
         }
         // find the sum of ordered quantity of each book
@@ -169,7 +178,7 @@ public class Bookstore {
         // print the books with details
         System.out.println("ISBN            Title             copies");
         try{
-            String popularSQL = "SELECT O.ISBN, B.title, SUM(O.quantity) FROM Ordering O, Book B WHERE O.ISBN=B.ISBN GROUP BY O.ISBN ORDER BY SUM(O.quantity) DESC";
+            String popularSQL = "SELECT O.ISBN, B.title, SUM(O.quantity) FROM Ordering O, Book B WHERE O.ISBN=B.ISBN GROUP BY O.ISBN ORDER BY SUM(O.quantity) DESC, B.title, O.ISBN";
             Statement stmt = conn.createStatement();
             ResultSet popularList = stmt.executeQuery(popularSQL);
             while (popularList.next()){
@@ -217,9 +226,11 @@ public class Bookstore {
             status.next();
             s = status.getString("shipping_status").charAt(0);
         }  catch(SQLException se){
-            System.out.println("Invalid Input. Please try again.");
+            System.out.println("Invalid Order ID for update due to invalid shipping status. Please try again.");
+            s = 'E';
         } catch(Exception e){
-            System.out.println("Invalid Input. Please try again.");
+            System.out.println("Invalid Order ID for update due to invalid shipping status. Please try again.");
+            s = 'E';
         }
         return s;
     }
@@ -233,9 +244,11 @@ public class Bookstore {
             status.next();
             q = status.getInt("quantity");
         } catch(SQLException se){
-            System.out.println("Invalid Input. Please try again.");
+            System.out.println("Invalid Order ID for update due to invalid quantity. Please try again.");
+            q = -1;
         } catch(Exception e){
-            System.out.println("Invalid Input. Please try again.");
+            System.out.println("Invalid Order ID for update due to invalid quantity. Please try again.");
+            q = -1;
         }
         return q;
     }

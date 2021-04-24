@@ -2,7 +2,6 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
-import java.time.LocalDate;
 
 public class Customer {
     private static boolean finish = false;
@@ -72,12 +71,13 @@ public class Customer {
                     int choice = scanner.nextInt();
                     correct_book_search = true;
                     while (choice < 1 || choice > 4){
-                        System.out.println("[ERROR]: Input is invalid.\n\nPlease enter again.");
+                        System.out.println("[ERROR]: Input is invalid.\n\nPlease enter again.");  //Make sure the input is betwwen 1 & 4
                         choice = scanner.nextInt();
                     }
                     switch (choice){
                         case 1:
                         boolean end1 = false;   //Make sure the ISBN is valid
+                        int count = 1;
                         while (!end1) {
                             try {
                                 System.out.print("Input the ISBN: ");
@@ -87,13 +87,14 @@ public class Customer {
                                 String cquery = "SELECT count(*) FROM Book WHERE ISBN = \"" + isbn + "\"";
                                 ResultSet crs = stmt.executeQuery(cquery);
                                 crs.next();
-                                int count = crs.getInt(1);  //count = count number of records
-                                if (count > 0) {
+                                int count_exist = crs.getInt(1);  //count_exist = count whether there is data that matches the search criteria
+                                if (count_exist > 0) {
                                     end1 = true;
-                                    String query = "SELECT * FROM Book WHERE ISBN = \"" + isbn + "\"";
+                                    String query = "SELECT * FROM Book WHERE ISBN = \"" + isbn + "\" ORDER BY title, ISBN";
                                     ResultSet rs = stmt.executeQuery(query);
-                                    System.out.println("\nRecord "+ count);
                                     while (rs.next()){
+                                        System.out.println("\nRecord "+ count);
+                                        count++;
                                         String isbn_q = rs.getString("ISBN");
                                         String title_q = rs.getString("title");
                                         int unit_price_q = rs.getInt("unit_price");
@@ -120,104 +121,1157 @@ public class Customer {
                                 System.out.println(e.getMessage());
                             }
                         } break;
-
+                        
                         case 2:
                         boolean end2 = false;  //Make sure the Book Title is valid
+                        count = 1;
                         while (!end2) {
-                            try{
-                                System.out.print("Input the Book Title: ");
-                                Scanner scan_title = new Scanner(System.in);
-                                String title = scan_title.next();
-                                Statement stmt = conn.createStatement();
-                                String cquery = "SELECT count(*) FROM Book WHERE title Like \'%" + title + "%\'";
-                                ResultSet crs = stmt.executeQuery(cquery);
-                                crs.next();
-                                int count = crs.getInt(1);
-                                if (count > 0) {
-                                    end2 = true;
-                                    String query = "SELECT * FROM Book WHERE title Like \'%" + title + "%\'";
-                                    ResultSet rs = stmt.executeQuery(query);
-                                    System.out.println("\nRecord "+ count);
-                                    while (rs.next()){
-                                        String isbn_q = rs.getString("ISBN");
-                                        String title_q = rs.getString("title");
-                                        int unit_price_q = rs.getInt("unit_price");
-                                        int no_of_copies_q = rs.getInt("no_of_copies");
-                                        System.out.println("ISBN: " + isbn_q);
-                                        System.out.println("Book Title:" + title_q);
-                                        System.out.println("Unit Price:" + unit_price_q);
-                                        System.out.println("No Of Available:" + no_of_copies_q);
-                                        
-                                        Statement stmta = conn.createStatement();  //stmta = a new statement with query for book_author
-                                        String aquery = "SELECT author_name FROM Book_author WHERE ISBN = \"" + isbn_q + "\"";
-                                        System.out.println("Authors:");
-                                        ResultSet ars = stmta.executeQuery(aquery);
-                                        int count_author = 1;
-                                        while (ars.next()){
-                                            String author_q = ars.getString("author_name");
-                                            System.out.println(count_author+" :"+author_q);
-                                            count_author++;
+                            System.out.print("Input the Book Title: ");
+                            Scanner scan_title = new Scanner(System.in);
+                            String title = scan_title.next();
+                            Statement stmt = conn.createStatement();
+
+                            if (title.charAt(0) != '%' && title.charAt(0) != '_'){  //The first letter is not _ or %
+                                if (title.charAt(title.length() - 1) != '%' && title.charAt(title.length() - 1) != '_'){  //Base Case (No % and _)
+                                    String cquery = "SELECT count(*) FROM Book WHERE BINARY title = \"" + title + "\"";
+                                    ResultSet crs = stmt.executeQuery(cquery);
+                                    crs.next();
+                                    int count_exist = crs.getInt(1);
+                                    if (count_exist > 0) {
+                                        end2 = true;
+                                        String query = "SELECT * FROM Book WHERE BINARY title = \"" + title + "\" ORDER BY title, ISBN";
+                                        ResultSet rs = stmt.executeQuery(query);
+                                        while (rs.next()){
+                                            System.out.println("Record " + count);
+                                            count++;
+                                            String isbn_q = rs.getString("ISBN");
+                                            String title_q = rs.getString("title");
+                                            int unit_price_q = rs.getInt("unit_price");
+                                            int no_of_copies_q = rs.getInt("no_of_copies");
+                                            System.out.println("ISBN: " + isbn_q);
+                                            System.out.println("Book Title:" + title_q);
+                                            System.out.println("Unit Price:" + unit_price_q);
+                                            System.out.println("No Of Available:" + no_of_copies_q);
+                                            
+                                            Statement stmta = conn.createStatement();  //stmta = a new statement with query for book_author
+                                            String aquery = "SELECT author_name FROM Book_author WHERE ISBN = \"" + isbn_q + "\" ORDER BY author_name";
+                                            System.out.println("Authors:");
+                                            ResultSet ars = stmta.executeQuery(aquery);
+                                            int count_author = 1;
+                                            while (ars.next()){
+                                                String author_q = ars.getString("author_name");
+                                                System.out.println(count_author+" :"+author_q);
+                                                count_author++;
+                                            }
+                                            System.out.println();   
                                         }
-                                        System.out.println();   
+                                    } else {
+                                        System.out.println("cannot query the book");
                                     }
-                                } else {
-                                    System.out.println("cannot query the book");
+                                } else if (title.charAt(title.length() - 1) == '_') {  // The last letter is _
+                                    title = title.substring(0, title.length()-1);
+                                    String cquery = "SELECT count(*) FROM Book WHERE BINARY title Like \'" + title + "_\'";
+                                    ResultSet crs = stmt.executeQuery(cquery);
+                                    crs.next();
+                                    int count_exist = crs.getInt(1);
+                                    if (count_exist > 0) {
+                                        end2 = true;
+                                        String query = "SELECT * FROM Book WHERE BINARY title Like \'" + title + "_\' ORDER BY title, ISBN";
+                                        ResultSet rs = stmt.executeQuery(query);
+                                        while (rs.next()){
+                                            System.out.println("Record " + count);
+                                            count++;
+                                            String isbn_q = rs.getString("ISBN");
+                                            String title_q = rs.getString("title");
+                                            int unit_price_q = rs.getInt("unit_price");
+                                            int no_of_copies_q = rs.getInt("no_of_copies");
+                                            System.out.println("ISBN: " + isbn_q);
+                                            System.out.println("Book Title:" + title_q);
+                                            System.out.println("Unit Price:" + unit_price_q);
+                                            System.out.println("No Of Available:" + no_of_copies_q);
+                                            
+                                            Statement stmta = conn.createStatement();  //stmta = a new statement with query for book_author
+                                            String aquery = "SELECT author_name FROM Book_author WHERE ISBN = \"" + isbn_q + "\" ORDER BY author_name";
+                                            System.out.println("Authors:");
+                                            ResultSet ars = stmta.executeQuery(aquery);
+                                            int count_author = 1;
+                                            while (ars.next()){
+                                                String author_q = ars.getString("author_name");
+                                                System.out.println(count_author+" :"+author_q);
+                                                count_author++;
+                                            }
+                                            System.out.println();   
+                                        }
+                                    } else {
+                                        System.out.println("cannot query the book");
+                                    }
+
+
+
+
+                                    
+                                    
+
+
+
+                                } else if (title.charAt(title.length() - 1) == '%') {  // The last letter is %
+                                    title = title.substring(0, title.length()-1);
+                                    List<String> title_list1 = new ArrayList<>();
+                                    String cquery = "SELECT count(*) FROM Book WHERE BINARY title = \"" + title + "\"";
+                                    ResultSet crs = stmt.executeQuery(cquery);
+                                    crs.next();
+                                    int count_exist = crs.getInt(1);
+                                    if (count_exist > 0) {
+                                        end2 = true;
+                                        String query = "SELECT * FROM Book WHERE BINARY title = \"" + title + "\" ORDER BY title, ISBN";
+                                        ResultSet rs = stmt.executeQuery(query);
+                                        while (rs.next()){
+                                            System.out.println("Record " + count);
+                                            count++;
+                                            String isbn_q = rs.getString("ISBN");
+                                            String title_q = rs.getString("title");
+                                            int unit_price_q = rs.getInt("unit_price");
+                                            int no_of_copies_q = rs.getInt("no_of_copies");
+                                            System.out.println("ISBN: " + isbn_q);
+                                            System.out.println("Book Title:" + title_q);
+                                            System.out.println("Unit Price:" + unit_price_q);
+                                            System.out.println("No Of Available:" + no_of_copies_q);
+                                            title_list1.add(isbn_q);
+
+                                            Statement stmta = conn.createStatement();  //stmta = a new statement with query for book_author
+                                            String aquery = "SELECT author_name FROM Book_author WHERE ISBN = \"" + isbn_q + "\" ORDER BY author_name";
+                                            System.out.println("Authors:");
+                                            ResultSet ars = stmta.executeQuery(aquery);
+                                            int count_author = 1;
+                                            while (ars.next()){
+                                                String author_q = ars.getString("author_name");
+                                                System.out.println(count_author+" :"+author_q);
+                                                count_author++;
+                                            }
+                                            System.out.println();   
+                                        }
+                                    } 
+
+                                    
+                                    String cquery2 = "SELECT count(*) FROM Book WHERE BINARY title Like \'" + title + "%\'";
+                                    ResultSet crs2 = stmt.executeQuery(cquery2);
+                                    crs2.next();
+                                    int count_exist2 = crs2.getInt(1);
+                                    if (count_exist2 > 0) {
+                                        end2 = true;
+                                        String query = "SELECT * FROM Book WHERE BINARY title Like \'" + title + "%\' ORDER BY title, ISBN";
+                                        ResultSet rs = stmt.executeQuery(query);
+                                        while (rs.next()){
+                                            System.out.println("Record " + count);
+                                            count++;
+                                            String isbn_q = rs.getString("ISBN");
+                                            String title_q = rs.getString("title");
+                                            int unit_price_q = rs.getInt("unit_price");
+                                            int no_of_copies_q = rs.getInt("no_of_copies");
+                                            
+                                            if (title_list1.contains(isbn_q) == false) {
+                                                title_list1.add(isbn_q);
+                                                System.out.println("ISBN: " + isbn_q);
+                                                System.out.println("Book Title:" + title_q);
+                                                System.out.println("Unit Price:" + unit_price_q);
+                                                System.out.println("No Of Available:" + no_of_copies_q);
+                                                Statement stmta = conn.createStatement();  //stmta = a new statement with query for book_author
+                                                String aquery = "SELECT author_name FROM Book_author WHERE ISBN = \"" + isbn_q + "\" ORDER BY author_name";
+                                                System.out.println("Authors:");
+                                                ResultSet ars = stmta.executeQuery(aquery);
+                                                int count_author = 1;
+                                                while (ars.next()){
+                                                    String author_q = ars.getString("author_name");
+                                                    System.out.println(count_author+" :"+author_q);
+                                                    count_author++;
+                                                }
+                                                System.out.println();   
+                                            } 
+                                            
+                                        }
+                                    } else {
+                                        System.out.println("cannot query the book");
+                                    }
                                 }
-                            }
-                            catch (SQLException e){
-                                System.out.println(e.getMessage());
+
+                            } else if (title.charAt(0) == '_') {   //The first letter is _
+                                title = title.substring(1, title.length());
+                                if (title.charAt(title.length() - 1) != '_' && title.charAt(title.length() - 1) != '%') {  //The last letter is not _ nor %
+                                    String cquery = "SELECT count(*) FROM Book WHERE BINARY title Like \'_" + title + "\'";
+                                    ResultSet crs = stmt.executeQuery(cquery);
+                                    crs.next();
+                                    int count_exist = crs.getInt(1);
+                                    if (count_exist > 0) {
+                                        end2 = true;
+                                        String query = "SELECT * FROM Book WHERE BINARY title Like \'_" + title + "\' ORDER BY title, ISBN";
+                                        ResultSet rs = stmt.executeQuery(query);
+                                        while (rs.next()){
+                                            System.out.println("Record " + count);
+                                            count++;
+                                            String isbn_q = rs.getString("ISBN");
+                                            String title_q = rs.getString("title");
+                                            int unit_price_q = rs.getInt("unit_price");
+                                            int no_of_copies_q = rs.getInt("no_of_copies");
+                                            System.out.println("ISBN: " + isbn_q);
+                                            System.out.println("Book Title:" + title_q);
+                                            System.out.println("Unit Price:" + unit_price_q);
+                                            System.out.println("No Of Available:" + no_of_copies_q);
+                                            
+                                            Statement stmta = conn.createStatement();  //stmta = a new statement with query for book_author
+                                            String aquery = "SELECT author_name FROM Book_author WHERE ISBN = \"" + isbn_q + "\" ORDER BY author_name";
+                                            System.out.println("Authors:");
+                                            ResultSet ars = stmta.executeQuery(aquery);
+                                            int count_author = 1;
+                                            while (ars.next()){
+                                                String author_q = ars.getString("author_name");
+                                                System.out.println(count_author+" :"+author_q);
+                                                count_author++;
+                                            }
+                                            System.out.println();   
+                                        }
+                                    } else {
+                                        System.out.println("cannot query the book");
+                                    }
+                                    
+
+                                } else if (title.charAt(title.length() - 1) == '_') {   //Both first and last letter are _
+                                    title = title.substring(0, title.length()-1);
+                                    String cquery = "SELECT count(*) FROM Book WHERE BINARY title Like \'_" + title + "_\'";
+                                    ResultSet crs = stmt.executeQuery(cquery);
+                                    crs.next();
+                                    int count_exist = crs.getInt(1);
+                                    if (count_exist > 0) {
+                                        end2 = true;
+                                        String query = "SELECT * FROM Book WHERE BINARY title Like \'_" + title + "_\' ORDER BY title, ISBN";
+                                        ResultSet rs = stmt.executeQuery(query);
+                                        while (rs.next()){
+                                            System.out.println("Record " + count);
+                                            count++;
+                                            String isbn_q = rs.getString("ISBN");
+                                            String title_q = rs.getString("title");
+                                            int unit_price_q = rs.getInt("unit_price");
+                                            int no_of_copies_q = rs.getInt("no_of_copies");
+                                            System.out.println("ISBN: " + isbn_q);
+                                            System.out.println("Book Title:" + title_q);
+                                            System.out.println("Unit Price:" + unit_price_q);
+                                            System.out.println("No Of Available:" + no_of_copies_q);
+                                            
+                                            Statement stmta = conn.createStatement();  //stmta = a new statement with query for book_author
+                                            String aquery = "SELECT author_name FROM Book_author WHERE ISBN = \"" + isbn_q + "\" ORDER BY author_name";
+                                            System.out.println("Authors:");
+                                            ResultSet ars = stmta.executeQuery(aquery);
+                                            int count_author = 1;
+                                            while (ars.next()){
+                                                String author_q = ars.getString("author_name");
+                                                System.out.println(count_author+" :"+author_q);
+                                                count_author++;
+                                            }
+                                            System.out.println();   
+                                        }
+                                    } else {
+                                        System.out.println("cannot query the book");
+                                    }
+
+                                } else if (title.charAt(title.length() - 1) == '%'){    //The first letter is _ while the last letter is %
+                                    List<String> title_list2 = new ArrayList<>();
+                                    title = title.substring(0, title.length()-1);
+                                    String cquery = "SELECT count(*) FROM Book WHERE BINARY title Like \'_" + title + "\'";
+                                    ResultSet crs = stmt.executeQuery(cquery);
+                                    crs.next();
+                                    int count_exist = crs.getInt(1);
+                                    if (count_exist > 0) {
+                                        end2 = true;
+                                        String query = "SELECT * FROM Book WHERE BINARY title Like \'_" + title + "\' ORDER BY title, ISBN";
+                                        ResultSet rs = stmt.executeQuery(query);
+                                        while (rs.next()){
+                                            System.out.println("Record " + count);
+                                            count++;
+                                            String isbn_q = rs.getString("ISBN");
+                                            String title_q = rs.getString("title");
+                                            int unit_price_q = rs.getInt("unit_price");
+                                            int no_of_copies_q = rs.getInt("no_of_copies");
+                                            System.out.println("ISBN: " + isbn_q);
+                                            System.out.println("Book Title:" + title_q);
+                                            System.out.println("Unit Price:" + unit_price_q);
+                                            System.out.println("No Of Available:" + no_of_copies_q);
+                                            title_list2.add(isbn_q);
+                                            Statement stmta = conn.createStatement();  //stmta = a new statement with query for book_author
+                                            String aquery = "SELECT author_name FROM Book_author WHERE ISBN = \"" + isbn_q + "\" ORDER BY author_name";
+                                            System.out.println("Authors:");
+                                            ResultSet ars = stmta.executeQuery(aquery);
+                                            int count_author = 1;
+                                            while (ars.next()){
+                                                String author_q = ars.getString("author_name");
+                                                System.out.println(count_author+" :"+author_q);
+                                                count_author++;
+                                            }
+                                            System.out.println();   
+                                        }
+                                    } 
+
+
+                                    String cquery2 = "SELECT count(*) FROM Book WHERE BINARY title Like \'_" + title + "%\'";
+                                    ResultSet crs2 = stmt.executeQuery(cquery2);
+                                    crs2.next();
+                                    int count_exist2 = crs2.getInt(1);
+                                    if (count_exist2 > 0) {
+                                        end2 = true;
+                                        String query = "SELECT * FROM Book WHERE BINARY title Like \'_" + title + "%\' ORDER BY title, ISBN";
+                                        ResultSet rs = stmt.executeQuery(query);
+                                        while (rs.next()){
+                                            System.out.println("Record " + count);
+                                            count++;
+                                            String isbn_q = rs.getString("ISBN");
+                                            String title_q = rs.getString("title");
+                                            int unit_price_q = rs.getInt("unit_price");
+                                            int no_of_copies_q = rs.getInt("no_of_copies");
+                                            
+                                            if (title_list2.contains(isbn_q) == false) {
+                                                title_list2.add(isbn_q);
+                                                System.out.println("ISBN: " + isbn_q);
+                                                System.out.println("Book Title:" + title_q);
+                                                System.out.println("Unit Price:" + unit_price_q);
+                                                System.out.println("No Of Available:" + no_of_copies_q);
+                                                Statement stmta = conn.createStatement();  //stmta = a new statement with query for book_author
+                                                String aquery = "SELECT author_name FROM Book_author WHERE ISBN = \"" + isbn_q + "\" ORDER BY author_name";
+                                                System.out.println("Authors:");
+                                                ResultSet ars = stmta.executeQuery(aquery);
+                                                int count_author = 1;
+                                                while (ars.next()){
+                                                    String author_q = ars.getString("author_name");
+                                                    System.out.println(count_author+" :"+author_q);
+                                                    count_author++;
+                                                }
+                                                System.out.println();   
+                                            }
+                                             
+                                        }
+                                    } else {
+                                        System.out.println("cannot query the book");
+                                    }
+                                }                 
+                                
+                            } else if (title.charAt(0) == '%'){  //The first letter is %
+                                List<String> title_list3 = new ArrayList<>();
+                                title = title.substring(1, title.length());
+                                if (title.charAt(title.length() - 1) != '_' && title.charAt(title.length() - 1) != '%') {  //The last letter is not _ nor %
+                                    String cquery = "SELECT count(*) FROM Book WHERE BINARY title = \"" + title + "\"";
+                                    ResultSet crs = stmt.executeQuery(cquery);
+                                    crs.next();
+                                    int count_exist = crs.getInt(1);
+                                    if (count_exist > 0) {
+                                        end2 = true;
+                                        String query = "SELECT * FROM Book WHERE BINARY title = \"" + title + "\" ORDER BY title, ISBN";
+                                        ResultSet rs = stmt.executeQuery(query);
+                                        while (rs.next()){
+                                            System.out.println("Record " + count);
+                                            count++;
+                                            String isbn_q = rs.getString("ISBN");
+                                            String title_q = rs.getString("title");
+                                            int unit_price_q = rs.getInt("unit_price");
+                                            int no_of_copies_q = rs.getInt("no_of_copies");
+                                            System.out.println("ISBN: " + isbn_q);
+                                            System.out.println("Book Title:" + title_q);
+                                            System.out.println("Unit Price:" + unit_price_q);
+                                            System.out.println("No Of Available:" + no_of_copies_q);
+                                            title_list3.add(isbn_q);
+                                            Statement stmta = conn.createStatement();  //stmta = a new statement with query for book_author
+                                            String aquery = "SELECT author_name FROM Book_author WHERE ISBN = \"" + isbn_q + "\" ORDER BY author_name";
+                                            System.out.println("Authors:");
+                                            ResultSet ars = stmta.executeQuery(aquery);
+                                            int count_author = 1;
+                                            while (ars.next()){
+                                                String author_q = ars.getString("author_name");
+                                                System.out.println(count_author+" :"+author_q);
+                                                count_author++;
+                                            }
+                                            System.out.println();   
+                                        }
+                                    } 
+                                    String cquery2 = "SELECT count(*) FROM Book WHERE BINARY title Like \'%" + title + "\'";
+                                    ResultSet crs2 = stmt.executeQuery(cquery2);
+                                    crs2.next();
+                                    int count_exist2 = crs2.getInt(1);
+                                    if (count_exist2 > 0) {
+                                        end2 = true;
+                                        String query = "SELECT * FROM Book WHERE BINARY title Like \'%" + title + "\' ORDER BY title, ISBN";
+                                        ResultSet rs = stmt.executeQuery(query);
+                                        while (rs.next()){
+                                            System.out.println("Record " + count);
+                                            count++;
+                                            String isbn_q = rs.getString("ISBN");
+                                            String title_q = rs.getString("title");
+                                            int unit_price_q = rs.getInt("unit_price");
+                                            int no_of_copies_q = rs.getInt("no_of_copies");
+                                            
+                                            if (title_list3.contains(isbn_q) == false) {
+                                                title_list3.add(isbn_q);
+                                                System.out.println("ISBN: " + isbn_q);
+                                                System.out.println("Book Title:" + title_q);
+                                                System.out.println("Unit Price:" + unit_price_q);
+                                                System.out.println("No Of Available:" + no_of_copies_q);
+                                                Statement stmta = conn.createStatement();  //stmta = a new statement with query for book_author
+                                                String aquery = "SELECT author_name FROM Book_author WHERE ISBN = \"" + isbn_q + "\" ORDER BY author_name";
+                                                System.out.println("Authors:");
+                                                ResultSet ars = stmta.executeQuery(aquery);
+                                                int count_author = 1;
+                                                while (ars.next()){
+                                                    String author_q = ars.getString("author_name");
+                                                    System.out.println(count_author+" :"+author_q);
+                                                    count_author++;
+                                                }
+                                                System.out.println();   
+                                            }
+                                            
+                                        }
+                                    } else {
+                                        System.out.println("cannot query the book");
+                                    }
+
+                                } else if (title.charAt(title.length() - 1) == '_') {   //The first letter is % while the last letter is _
+                                    title = title.substring(0, title.length()-1);
+                                    List<String> title_list4 = new ArrayList<>();
+                                    String cquery = "SELECT count(*) FROM Book WHERE BINARY title LIKE \'" + title + "_\'";
+                                    ResultSet crs = stmt.executeQuery(cquery);
+                                    crs.next();
+                                    int count_exist = crs.getInt(1);
+                                    if (count_exist > 0) {
+                                        end2 = true;
+                                        String query = "SELECT * FROM Book WHERE BINARY title LIKE \'" + title + "_\' ORDER BY title, ISBN";
+                                        ResultSet rs = stmt.executeQuery(query);
+                                        while (rs.next()){
+                                            System.out.println("Record " + count);
+                                            count++;
+                                            String isbn_q = rs.getString("ISBN");
+                                            String title_q = rs.getString("title");
+                                            int unit_price_q = rs.getInt("unit_price");
+                                            int no_of_copies_q = rs.getInt("no_of_copies");
+                                            System.out.println("ISBN: " + isbn_q);
+                                            System.out.println("Book Title:" + title_q);
+                                            System.out.println("Unit Price:" + unit_price_q);
+                                            System.out.println("No Of Available:" + no_of_copies_q);
+                                            title_list4.add(isbn_q);
+                                            Statement stmta = conn.createStatement();  //stmta = a new statement with query for book_author
+                                            String aquery = "SELECT author_name FROM Book_author WHERE ISBN = \"" + isbn_q + "\" ORDER BY author_name";
+                                            System.out.println("Authors:");
+                                            ResultSet ars = stmta.executeQuery(aquery);
+                                            int count_author = 1;
+                                            while (ars.next()){
+                                                String author_q = ars.getString("author_name");
+                                                System.out.println(count_author+" :"+author_q);
+                                                count_author++;
+                                            }
+                                            System.out.println();   
+                                        }
+                                    }
+                                    String cquery2 = "SELECT count(*) FROM Book WHERE BINARY title Like \'%" + title + "_\'";
+                                    ResultSet crs2 = stmt.executeQuery(cquery2);
+                                    crs2.next();
+                                    int count_exist2 = crs2.getInt(1);
+                                    if (count_exist2 > 0) {
+                                        end2 = true;
+                                        String query = "SELECT * FROM Book WHERE BINARY title Like \'%" + title + "_\' ORDER BY title, ISBN";
+                                        ResultSet rs = stmt.executeQuery(query);
+                                        while (rs.next()){
+                                            System.out.println("Record " + count);
+                                            count++;
+                                            String isbn_q = rs.getString("ISBN");
+                                            String title_q = rs.getString("title");
+                                            int unit_price_q = rs.getInt("unit_price");
+                                            int no_of_copies_q = rs.getInt("no_of_copies");
+                                            
+                                            if (title_list4.contains(isbn_q) == false) {
+                                                title_list4.add(isbn_q);
+                                                System.out.println("ISBN: " + isbn_q);
+                                                System.out.println("Book Title:" + title_q);
+                                                System.out.println("Unit Price:" + unit_price_q);
+                                                System.out.println("No Of Available:" + no_of_copies_q);
+                                                Statement stmta = conn.createStatement();  //stmta = a new statement with query for book_author
+                                                String aquery = "SELECT author_name FROM Book_author WHERE ISBN = \"" + isbn_q + "\" ORDER BY author_name";
+                                                System.out.println("Authors:");
+                                                ResultSet ars = stmta.executeQuery(aquery);
+                                                int count_author = 1;
+                                                while (ars.next()){
+                                                    String author_q = ars.getString("author_name");
+                                                    System.out.println(count_author+" :"+author_q);
+                                                    count_author++;
+                                                }
+                                                System.out.println();   
+                                            }
+                                            
+                                        }
+                                    } else {
+                                        System.out.println("cannot query the book");
+                                    }
+
+                                } else if (title.charAt(title.length() - 1) == '%'){    //Both first and last letter are %
+                                    title = title.substring(0, title.length()-1);
+                                    List<String> title_list5 = new ArrayList<>();
+                                    String cquery = "SELECT count(*) FROM Book WHERE BINARY title = \"" + title + "\"";
+                                    ResultSet crs = stmt.executeQuery(cquery);
+                                    crs.next();
+                                    int count_exist = crs.getInt(1);
+                                    if (count_exist > 0) {
+                                        end2 = true;
+                                        String query = "SELECT * FROM Book WHERE BINARY title = \"" + title + "\" ORDER BY title, ISBN";
+                                        ResultSet rs = stmt.executeQuery(query);
+                                        while (rs.next()){
+                                            System.out.println("Record " + count);
+                                            count++;
+                                            String isbn_q = rs.getString("ISBN");
+                                            String title_q = rs.getString("title");
+                                            int unit_price_q = rs.getInt("unit_price");
+                                            int no_of_copies_q = rs.getInt("no_of_copies");
+                                            System.out.println("ISBN: " + isbn_q);
+                                            System.out.println("Book Title:" + title_q);
+                                            System.out.println("Unit Price:" + unit_price_q);
+                                            System.out.println("No Of Available:" + no_of_copies_q);
+                                            title_list5.add(isbn_q);
+                                            Statement stmta = conn.createStatement();  //stmta = a new statement with query for book_author
+                                            String aquery = "SELECT author_name FROM Book_author WHERE ISBN = \"" + isbn_q + "\" ORDER BY author_name";
+                                            System.out.println("Authors:");
+                                            ResultSet ars = stmta.executeQuery(aquery);
+                                            int count_author = 1;
+                                            while (ars.next()){
+                                                String author_q = ars.getString("author_name");
+                                                System.out.println(count_author+" :"+author_q);
+                                                count_author++;
+                                            }
+                                            System.out.println();   
+                                        }
+                                    }
+                                    String cquery2 = "SELECT count(*) FROM Book WHERE BINARY title Like \'%" + title + "%\'";
+                                    ResultSet crs2 = stmt.executeQuery(cquery2);
+                                    crs2.next();
+                                    int count_exist2 = crs2.getInt(1);
+                                    if (count_exist2 > 0) {
+                                        end2 = true;
+                                        String query = "SELECT * FROM Book WHERE BINARY title Like \'%" + title + "%\' ORDER BY title, ISBN";
+                                        ResultSet rs = stmt.executeQuery(query);
+                                        while (rs.next()){
+                                            System.out.println("Record " + count);
+                                            count++;
+                                            String isbn_q = rs.getString("ISBN");
+                                            String title_q = rs.getString("title");
+                                            int unit_price_q = rs.getInt("unit_price");
+                                            int no_of_copies_q = rs.getInt("no_of_copies");
+                                            
+                                            if (title_list5.contains(isbn_q) == false) {
+                                                title_list5.add(isbn_q);
+                                                System.out.println("ISBN: " + isbn_q);
+                                                System.out.println("Book Title:" + title_q);
+                                                System.out.println("Unit Price:" + unit_price_q);
+                                                System.out.println("No Of Available:" + no_of_copies_q);
+                                                Statement stmta = conn.createStatement();  //stmta = a new statement with query for book_author
+                                                String aquery = "SELECT author_name FROM Book_author WHERE ISBN = \"" + isbn_q + "\" ORDER BY author_name";
+                                                System.out.println("Authors:");
+                                                ResultSet ars = stmta.executeQuery(aquery);
+                                                int count_author = 1;
+                                                while (ars.next()){
+                                                    String author_q = ars.getString("author_name");
+                                                    System.out.println(count_author+" :"+author_q);
+                                                    count_author++;
+                                                }
+                                                System.out.println();  
+                                            }
+                                             
+                                        }
+                                    } 
+                                                                      
+                                    else {
+                                        System.out.println("cannot query the book");
+                                    }
+
+                                }
                             }
                         } break;
                         
                         case 3:
                         boolean end3 = false;  //Make sure the Author Name is valid
+                        count = 1;
                         while (!end3) {
-                            try{
-                                System.out.print("Input the Author Name: ");
-                                Scanner scan_author = new Scanner(System.in);
-                                String author = scan_author.next();
-                                Statement stmt = conn.createStatement();
-                                String cquery = "SELECT count(*) FROM Book WHERE ISBN IN (SELECT ISBN FROM Book_author WHERE author_name Like \'%" + author + "%\')";
-                                ResultSet crs = stmt.executeQuery(cquery);
-                                crs.next();
-                                int count = crs.getInt(1);
-                                if (count > 0) {
-                                    end3 = true;
-                                    String query = "SELECT * FROM Book WHERE ISBN IN (SELECT ISBN FROM Book_author WHERE author_name Like \'%" + author + "%\')";
-                                    ResultSet rs = stmt.executeQuery(query);
-                                    System.out.println("\nRecord "+ count);
-                                    while (rs.next()){
-                                        String isbn_q = rs.getString("ISBN");
-                                        String title_q = rs.getString("title");
-                                        int unit_price_q = rs.getInt("unit_price");
-                                        int no_of_copies_q = rs.getInt("no_of_copies");
-                                        System.out.println("ISBN: " + isbn_q);
-                                        System.out.println("Book Title:" + title_q);
-                                        System.out.println("Unit Price:" + unit_price_q);
-                                        System.out.println("No Of Available:" + no_of_copies_q);
-                                        
-                                        Statement stmta = conn.createStatement();  //stmta = a new statement with query for book_author
-                                        String aquery = "SELECT author_name FROM Book_author WHERE ISBN = \"" + isbn_q + "\"";
-                                        System.out.println("Authors:");
-                                        ResultSet ars = stmta.executeQuery(aquery);
-                                        int count_author = 1;
-                                        while (ars.next()){
-                                            String author_q = ars.getString("author_name");
-                                            System.out.println(count_author+" :"+author_q);
-                                            count_author++;
+                            System.out.print("Input the Author Name: ");
+                            Scanner scan_author = new Scanner(System.in);
+                            String author = scan_author.next();
+                            Statement stmt = conn.createStatement();
+                            if (author.charAt(0) != '%' && author.charAt(0) != '_') {
+                                if (author.charAt(author.length() - 1) != '%' && author.charAt(author.length() - 1) != '_') {
+                                    String cquery = "SELECT count(*) FROM Book WHERE ISBN IN (SELECT ISBN FROM Book_author WHERE BINARY author_name = \"" + author + "\")";
+                                    ResultSet crs = stmt.executeQuery(cquery);
+                                    crs.next();
+                                    int count_exist = crs.getInt(1);
+                                    if (count_exist > 0) {
+                                        end3 = true;
+                                        String query = "SELECT * FROM Book WHERE ISBN IN (SELECT ISBN FROM Book_author WHERE BINARY author_name = \"" + author + "\") ORDER BY title, ISBN";
+                                        ResultSet rs = stmt.executeQuery(query);
+                                        //System.out.println("\nRecord "+ count);
+                                        while (rs.next()){
+                                            System.out.println("Record " + count);
+                                            count++;
+                                            String isbn_q = rs.getString("ISBN");
+                                            String title_q = rs.getString("title");
+                                            int unit_price_q = rs.getInt("unit_price");
+                                            int no_of_copies_q = rs.getInt("no_of_copies");
+                                            System.out.println("ISBN: " + isbn_q);
+                                            System.out.println("Book Title:" + title_q);
+                                            System.out.println("Unit Price:" + unit_price_q);
+                                            System.out.println("No Of Available:" + no_of_copies_q);
+                                            
+                                            Statement stmta = conn.createStatement();  //stmta = a new statement with query for book_author
+                                            String aquery = "SELECT author_name FROM Book_author WHERE ISBN = \"" + isbn_q + "\" ORDER BY author_name";
+                                            System.out.println("Authors:");
+                                            ResultSet ars = stmta.executeQuery(aquery);
+                                            int count_author = 1;
+                                            while (ars.next()){
+                                                String author_q = ars.getString("author_name");
+                                                System.out.println(count_author+" :"+author_q);
+                                                count_author++;
+                                            }
+                                            
+                                            System.out.println();   
                                         }
-                                        
-                                        System.out.println();   
+                                    } else {
+                                        System.out.println("cannot query the book");
                                     }
-                                } else {
-                                    System.out.println("cannot query the book");
+                                } else if (author.charAt(author.length() - 1) == '_') {
+                                    author = author.substring(0, author.length()-1);
+                                    String cquery = "SELECT count(*) FROM Book WHERE ISBN IN (SELECT ISBN FROM Book_author WHERE BINARY author_name Like \'" + author + "_\')";
+                                    ResultSet crs = stmt.executeQuery(cquery);
+                                    crs.next();
+                                    int count_exist = crs.getInt(1);
+                                    if (count_exist > 0) {
+                                        end3 = true;
+                                        String query = "SELECT * FROM Book WHERE ISBN IN (SELECT ISBN FROM Book_author WHERE BINARY author_name Like \'" + author + "_\') ORDER BY title, ISBN";
+                                        ResultSet rs = stmt.executeQuery(query);
+                                        //System.out.println("\nRecord "+ count);
+                                        while (rs.next()){
+                                            System.out.println("Record " + count);
+                                            count++;
+                                            String isbn_q = rs.getString("ISBN");
+                                            String title_q = rs.getString("title");
+                                            int unit_price_q = rs.getInt("unit_price");
+                                            int no_of_copies_q = rs.getInt("no_of_copies");
+                                            System.out.println("ISBN: " + isbn_q);
+                                            System.out.println("Book Title:" + title_q);
+                                            System.out.println("Unit Price:" + unit_price_q);
+                                            System.out.println("No Of Available:" + no_of_copies_q);
+                                            
+                                            Statement stmta = conn.createStatement();  //stmta = a new statement with query for book_author
+                                            String aquery = "SELECT author_name FROM Book_author WHERE ISBN = \"" + isbn_q + "\" ORDER BY author_name";
+                                            System.out.println("Authors:");
+                                            ResultSet ars = stmta.executeQuery(aquery);
+                                            int count_author = 1;
+                                            while (ars.next()){
+                                                String author_q = ars.getString("author_name");
+                                                System.out.println(count_author+" :"+author_q);
+                                                count_author++;
+                                            }
+                                            
+                                            System.out.println();   
+                                        }
+                                    } else {
+                                        System.out.println("cannot query the book");
+                                    }
+
+                                } else if (author.charAt(author.length() - 1) == '%') {
+                                    author = author.substring(0, author.length()-1);
+                                    List<String> author_list1 = new ArrayList<>();
+                                    String cquery = "SELECT count(*) FROM Book WHERE ISBN IN (SELECT ISBN FROM Book_author WHERE BINARY author_name = \"" + author + "\")";
+                                    ResultSet crs = stmt.executeQuery(cquery);
+                                    crs.next();
+                                    int count_exist = crs.getInt(1);
+                                    if (count_exist > 0) {
+                                        end3 = true;
+                                        String query = "SELECT * FROM Book WHERE ISBN IN (SELECT ISBN FROM Book_author WHERE BINARY author_name = \"" + author + "\") ORDER BY title, ISBN";
+                                        ResultSet rs = stmt.executeQuery(query);
+                                        //System.out.println("\nRecord "+ count);
+                                        while (rs.next()){
+                                            System.out.println("Record " + count);
+                                            count++;
+                                            String isbn_q = rs.getString("ISBN");
+                                            String title_q = rs.getString("title");
+                                            int unit_price_q = rs.getInt("unit_price");
+                                            int no_of_copies_q = rs.getInt("no_of_copies");
+                                            System.out.println("ISBN: " + isbn_q);
+                                            System.out.println("Book Title:" + title_q);
+                                            System.out.println("Unit Price:" + unit_price_q);
+                                            System.out.println("No Of Available:" + no_of_copies_q);
+                                            author_list1.add(isbn_q);
+                                            Statement stmta = conn.createStatement();  //stmta = a new statement with query for book_author
+                                            String aquery = "SELECT author_name FROM Book_author WHERE ISBN = \"" + isbn_q + "\" ORDER BY author_name";
+                                            System.out.println("Authors:");
+                                            ResultSet ars = stmta.executeQuery(aquery);
+                                            int count_author = 1;
+                                            while (ars.next()){
+                                                String author_q = ars.getString("author_name");
+                                                System.out.println(count_author+" :"+author_q);
+                                                count_author++;
+                                            }
+                                            
+                                            System.out.println();   
+                                        }
+                                    }
+
+                                    String cquery2 = "SELECT count(*) FROM Book WHERE ISBN IN (SELECT ISBN FROM Book_author WHERE BINARY author_name Like \'" + author + "%\')";
+                                    ResultSet crs2 = stmt.executeQuery(cquery2);
+                                    crs2.next();
+                                    int count_exist2 = crs2.getInt(1);
+                                    if (count_exist2 > 0) {
+                                        end3 = true;
+                                        String query = "SELECT * FROM Book WHERE ISBN IN (SELECT ISBN FROM Book_author WHERE BINARY author_name Like \'" + author + "%\') ORDER BY title, ISBN";
+                                        ResultSet rs = stmt.executeQuery(query);
+                                        //System.out.println("\nRecord "+ count);
+                                        while (rs.next()){
+                                            System.out.println("Record " + count);
+                                            count++;
+                                            String isbn_q = rs.getString("ISBN");
+                                            String title_q = rs.getString("title");
+                                            int unit_price_q = rs.getInt("unit_price");
+                                            int no_of_copies_q = rs.getInt("no_of_copies");
+                                            
+                                            if (author_list1.contains(isbn_q)== false) {
+                                                author_list1.add(isbn_q);
+                                                System.out.println("ISBN: " + isbn_q);
+                                                System.out.println("Book Title:" + title_q);
+                                                System.out.println("Unit Price:" + unit_price_q);
+                                                System.out.println("No Of Available:" + no_of_copies_q);
+                                                Statement stmta = conn.createStatement();  //stmta = a new statement with query for book_author
+                                                String aquery = "SELECT author_name FROM Book_author WHERE ISBN = \"" + isbn_q + "\" ORDER BY author_name";
+                                                System.out.println("Authors:");
+                                                ResultSet ars = stmta.executeQuery(aquery);
+                                                int count_author = 1;
+                                                while (ars.next()){
+                                                    String author_q = ars.getString("author_name");
+                                                    System.out.println(count_author+" :"+author_q);
+                                                    count_author++;
+                                                }
+                                                
+                                                System.out.println();
+                                            }
+                                               
+                                        }
+                                    } else {
+                                        System.out.println("cannot query the book");
+                                    }
+                                }
+                                    
+
+                            } else if (author.charAt(0) == '_') {
+                                author = author.substring(1, author.length());
+                                if (author.charAt(author.length() - 1) != '%' && author.charAt(author.length() - 1) != '_') {
+                                    String cquery = "SELECT count(*) FROM Book WHERE ISBN IN (SELECT ISBN FROM Book_author WHERE BINARY author_name Like \'_" + author + "\')";
+                                    ResultSet crs = stmt.executeQuery(cquery);
+                                    crs.next();
+                                    int count_exist = crs.getInt(1);
+                                    if (count_exist > 0) {
+                                        end3 = true;
+                                        String query = "SELECT * FROM Book WHERE ISBN IN (SELECT ISBN FROM Book_author WHERE BINARY author_name Like \'_" + author + "\') ORDER BY title, ISBN";
+                                        ResultSet rs = stmt.executeQuery(query);
+                                        //System.out.println("\nRecord "+ count);
+                                        while (rs.next()){
+                                            System.out.println("Record " + count);
+                                            count++;
+                                            String isbn_q = rs.getString("ISBN");
+                                            String title_q = rs.getString("title");
+                                            int unit_price_q = rs.getInt("unit_price");
+                                            int no_of_copies_q = rs.getInt("no_of_copies");
+                                            System.out.println("ISBN: " + isbn_q);
+                                            System.out.println("Book Title:" + title_q);
+                                            System.out.println("Unit Price:" + unit_price_q);
+                                            System.out.println("No Of Available:" + no_of_copies_q);
+                                            
+                                            Statement stmta = conn.createStatement();  //stmta = a new statement with query for book_author
+                                            String aquery = "SELECT author_name FROM Book_author WHERE ISBN = \"" + isbn_q + "\" ORDER BY author_name";
+                                            System.out.println("Authors:");
+                                            ResultSet ars = stmta.executeQuery(aquery);
+                                            int count_author = 1;
+                                            while (ars.next()){
+                                                String author_q = ars.getString("author_name");
+                                                System.out.println(count_author+" :"+author_q);
+                                                count_author++;
+                                            }
+                                            
+                                            System.out.println();   
+                                        }
+                                    } else {
+                                        System.out.println("cannot query the book");
+                                    }
+                                } else if (author.charAt(author.length() - 1) == '_') {
+                                    author = author.substring(0, author.length()-1);
+                                    String cquery = "SELECT count(*) FROM Book WHERE ISBN IN (SELECT ISBN FROM Book_author WHERE BINARY author_name Like \'_" + author + "_\')";
+                                    ResultSet crs = stmt.executeQuery(cquery);
+                                    crs.next();
+                                    int count_exist = crs.getInt(1);
+                                    if (count_exist > 0) {
+                                        end3 = true;
+                                        String query = "SELECT * FROM Book WHERE ISBN IN (SELECT ISBN FROM Book_author WHERE BINARY author_name Like \'_" + author + "_\') ORDER BY title, ISBN";
+                                        ResultSet rs = stmt.executeQuery(query);
+                                        //System.out.println("\nRecord "+ count);
+                                        while (rs.next()){
+                                            System.out.println("Record " + count);
+                                            count++;
+                                            String isbn_q = rs.getString("ISBN");
+                                            String title_q = rs.getString("title");
+                                            int unit_price_q = rs.getInt("unit_price");
+                                            int no_of_copies_q = rs.getInt("no_of_copies");
+                                            System.out.println("ISBN: " + isbn_q);
+                                            System.out.println("Book Title:" + title_q);
+                                            System.out.println("Unit Price:" + unit_price_q);
+                                            System.out.println("No Of Available:" + no_of_copies_q);
+                                            
+                                            Statement stmta = conn.createStatement();  //stmta = a new statement with query for book_author
+                                            String aquery = "SELECT author_name FROM Book_author WHERE ISBN = \"" + isbn_q + "\" ORDER BY author_name";
+                                            System.out.println("Authors:");
+                                            ResultSet ars = stmta.executeQuery(aquery);
+                                            int count_author = 1;
+                                            while (ars.next()){
+                                                String author_q = ars.getString("author_name");
+                                                System.out.println(count_author+" :"+author_q);
+                                                count_author++;
+                                            }
+                                            
+                                            System.out.println();   
+                                        }
+                                    } else {
+                                        System.out.println("cannot query the book");
+                                    }
+
+                                } else if (author.charAt(author.length() - 1) == '%') {
+                                    author = author.substring(0, author.length()-1);
+                                    List<String> author_list2 = new ArrayList<>();
+                                    String cquery = "SELECT count(*) FROM Book WHERE ISBN IN (SELECT ISBN FROM Book_author WHERE BINARY author_name Like \'_" + author + "\')";
+                                    ResultSet crs = stmt.executeQuery(cquery);
+                                    crs.next();
+                                    int count_exist = crs.getInt(1);
+                                    if (count_exist > 0) {
+                                        end3 = true;
+                                        String query = "SELECT * FROM Book WHERE ISBN IN (SELECT ISBN FROM Book_author WHERE BINARY author_name Like \'_" + author + "\') ORDER BY title, ISBN";
+                                        ResultSet rs = stmt.executeQuery(query);
+                                        //System.out.println("\nRecord "+ count);
+                                        while (rs.next()){
+                                            System.out.println("Record " + count);
+                                            count++;
+                                            String isbn_q = rs.getString("ISBN");
+                                            String title_q = rs.getString("title");
+                                            int unit_price_q = rs.getInt("unit_price");
+                                            int no_of_copies_q = rs.getInt("no_of_copies");
+                                            System.out.println("ISBN: " + isbn_q);
+                                            System.out.println("Book Title:" + title_q);
+                                            System.out.println("Unit Price:" + unit_price_q);
+                                            System.out.println("No Of Available:" + no_of_copies_q);
+                                            author_list2.add(isbn_q);
+                                            Statement stmta = conn.createStatement();  //stmta = a new statement with query for book_author
+                                            String aquery = "SELECT author_name FROM Book_author WHERE ISBN = \"" + isbn_q + "\" ORDER BY author_name";
+                                            System.out.println("Authors:");
+                                            ResultSet ars = stmta.executeQuery(aquery);
+                                            int count_author = 1;
+                                            while (ars.next()){
+                                                String author_q = ars.getString("author_name");
+                                                System.out.println(count_author+" :"+author_q);
+                                                count_author++;
+                                            }
+                                            
+                                            System.out.println();   
+                                        }
+                                    }
+
+
+                                    String cquery2 = "SELECT count(*) FROM Book WHERE ISBN IN (SELECT ISBN FROM Book_author WHERE BINARY author_name Like \'_" + author + "%\')";
+                                    ResultSet crs2 = stmt.executeQuery(cquery2);
+                                    crs2.next();
+                                    int count_exist2 = crs2.getInt(1);
+                                    if (count_exist2 > 0) {
+                                        end3 = true;
+                                        String query = "SELECT * FROM Book WHERE ISBN IN (SELECT ISBN FROM Book_author WHERE BINARY author_name Like \'_" + author + "%\') ORDER BY title, ISBN";
+                                        ResultSet rs = stmt.executeQuery(query);
+                                        //System.out.println("\nRecord "+ count);
+                                        while (rs.next()){
+                                            System.out.println("Record " + count);
+                                            count++;
+                                            String isbn_q = rs.getString("ISBN");
+                                            String title_q = rs.getString("title");
+                                            int unit_price_q = rs.getInt("unit_price");
+                                            int no_of_copies_q = rs.getInt("no_of_copies");
+                                            
+                                            if (author_list2.contains(isbn_q) == false) {
+                                                author_list2.add(isbn_q);
+                                                System.out.println("ISBN: " + isbn_q);
+                                                System.out.println("Book Title:" + title_q);
+                                                System.out.println("Unit Price:" + unit_price_q);
+                                                System.out.println("No Of Available:" + no_of_copies_q);
+                                                Statement stmta = conn.createStatement();  //stmta = a new statement with query for book_author
+                                                String aquery = "SELECT author_name FROM Book_author WHERE ISBN = \"" + isbn_q + "\" ORDER BY author_name";
+                                                System.out.println("Authors:");
+                                                ResultSet ars = stmta.executeQuery(aquery);
+                                                int count_author = 1;
+                                                while (ars.next()){
+                                                    String author_q = ars.getString("author_name");
+                                                    System.out.println(count_author+" :"+author_q);
+                                                    count_author++;
+                                                }
+                                                
+                                                System.out.println();
+                                            }
+                                               
+                                        }
+                                    } else {
+                                        System.out.println("cannot query the book");
+                                    }
+                                }
+                                     
+                            } else if (author.charAt(0) == '%') {
+                                author = author.substring(1, author.length());
+                                if (author.charAt(author.length() - 1) != '%' && author.charAt(author.length() - 1) != '_') {
+                                    List<String> author_list3 = new ArrayList<>();
+                                    String cquery = "SELECT count(*) FROM Book WHERE ISBN IN (SELECT ISBN FROM Book_author WHERE BINARY author_name = \"" + author + "\")";
+                                    ResultSet crs = stmt.executeQuery(cquery);
+                                    crs.next();
+                                    int count_exist = crs.getInt(1);
+                                    if (count_exist > 0) {
+                                        end3 = true;
+                                        String query = "SELECT * FROM Book WHERE ISBN IN (SELECT ISBN FROM Book_author WHERE BINARY author_name = \"" + author + "\") ORDER BY title, ISBN";
+                                        ResultSet rs = stmt.executeQuery(query);
+                                        //System.out.println("\nRecord "+ count);
+                                        while (rs.next()){
+                                            System.out.println("Record " + count);
+                                            count++;
+                                            String isbn_q = rs.getString("ISBN");
+                                            String title_q = rs.getString("title");
+                                            int unit_price_q = rs.getInt("unit_price");
+                                            int no_of_copies_q = rs.getInt("no_of_copies");
+                                            System.out.println("ISBN: " + isbn_q);
+                                            System.out.println("Book Title:" + title_q);
+                                            System.out.println("Unit Price:" + unit_price_q);
+                                            System.out.println("No Of Available:" + no_of_copies_q);
+                                            author_list3.add(isbn_q);
+                                            Statement stmta = conn.createStatement();  //stmta = a new statement with query for book_author
+                                            String aquery = "SELECT author_name FROM Book_author WHERE ISBN = \"" + isbn_q + "\" ORDER BY author_name";
+                                            System.out.println("Authors:");
+                                            ResultSet ars = stmta.executeQuery(aquery);
+                                            int count_author = 1;
+                                            while (ars.next()){
+                                                String author_q = ars.getString("author_name");
+                                                System.out.println(count_author+" :"+author_q);
+                                                count_author++;
+                                            }
+                                            
+                                            System.out.println();   
+                                        }
+                                    }
+
+                                    String cquery2 = "SELECT count(*) FROM Book WHERE ISBN IN (SELECT ISBN FROM Book_author WHERE BINARY author_name Like \'%" + author + "\')";
+                                    ResultSet crs2 = stmt.executeQuery(cquery2);
+                                    crs2.next();
+                                    int count_exist2 = crs2.getInt(1);
+                                    if (count_exist2 > 0) {
+                                        end3 = true;
+                                        String query = "SELECT * FROM Book WHERE ISBN IN (SELECT ISBN FROM Book_author WHERE BINARY author_name Like \'%" + author + "\') ORDER BY title, ISBN";
+                                        ResultSet rs = stmt.executeQuery(query);
+                                        //System.out.println("\nRecord "+ count);
+                                        while (rs.next()){
+                                            System.out.println("Record " + count);
+                                            count++;
+                                            String isbn_q = rs.getString("ISBN");
+                                            String title_q = rs.getString("title");
+                                            int unit_price_q = rs.getInt("unit_price");
+                                            int no_of_copies_q = rs.getInt("no_of_copies");
+                                            
+                                            if (author_list3.contains(isbn_q) == false) {
+                                                author_list3.add(isbn_q);
+                                                System.out.println("ISBN: " + isbn_q);
+                                                System.out.println("Book Title:" + title_q);
+                                                System.out.println("Unit Price:" + unit_price_q);
+                                                System.out.println("No Of Available:" + no_of_copies_q);
+                                                Statement stmta = conn.createStatement();  //stmta = a new statement with query for book_author
+                                                String aquery = "SELECT author_name FROM Book_author WHERE ISBN = \"" + isbn_q + "\" ORDER BY author_name";
+                                                System.out.println("Authors:");
+                                                ResultSet ars = stmta.executeQuery(aquery);
+                                                int count_author = 1;
+                                                while (ars.next()){
+                                                    String author_q = ars.getString("author_name");
+                                                    System.out.println(count_author+" :"+author_q);
+                                                    count_author++;
+                                                }
+                                                
+                                                System.out.println();   
+                                            }
+                                            
+                                        }
+                                    } else {
+                                        System.out.println("cannot query the book");
+                                    }
+
+
+                                } else if (author.charAt(author.length() - 1) == '_') {
+                                    List<String> author_list4 = new ArrayList<>();
+                                    author = author.substring(0, author.length()-1);
+                                    String cquery = "SELECT count(*) FROM Book WHERE ISBN IN (SELECT ISBN FROM Book_author WHERE BINARY author_name Like \'" + author + "_\')";
+                                    ResultSet crs = stmt.executeQuery(cquery);
+                                    crs.next();
+                                    int count_exist = crs.getInt(1);
+                                    if (count_exist > 0) {
+                                        end3 = true;
+                                        String query = "SELECT * FROM Book WHERE ISBN IN (SELECT ISBN FROM Book_author WHERE BINARY author_name Like \'" + author + "_\') ORDER BY title, ISBN";
+                                        ResultSet rs = stmt.executeQuery(query);
+                                        //System.out.println("\nRecord "+ count);
+                                        while (rs.next()){
+                                            System.out.println("Record " + count);
+                                            count++;
+                                            String isbn_q = rs.getString("ISBN");
+                                            String title_q = rs.getString("title");
+                                            int unit_price_q = rs.getInt("unit_price");
+                                            int no_of_copies_q = rs.getInt("no_of_copies");
+                                            System.out.println("ISBN: " + isbn_q);
+                                            System.out.println("Book Title:" + title_q);
+                                            System.out.println("Unit Price:" + unit_price_q);
+                                            System.out.println("No Of Available:" + no_of_copies_q);
+                                            author_list4.add(isbn_q);
+                                            Statement stmta = conn.createStatement();  //stmta = a new statement with query for book_author
+                                            String aquery = "SELECT author_name FROM Book_author WHERE ISBN = \"" + isbn_q + "\" ORDER BY author_name";
+                                            System.out.println("Authors:");
+                                            ResultSet ars = stmta.executeQuery(aquery);
+                                            int count_author = 1;
+                                            while (ars.next()){
+                                                String author_q = ars.getString("author_name");
+                                                System.out.println(count_author+" :"+author_q);
+                                                count_author++;
+                                            }
+                                            
+                                            System.out.println();   
+                                        }
+                                    }
+
+
+                                    String cquery2 = "SELECT count(*) FROM Book WHERE ISBN IN (SELECT ISBN FROM Book_author WHERE BINARY author_name Like \'%" + author + "_\')";
+                                    ResultSet crs2 = stmt.executeQuery(cquery2);
+                                    crs2.next();
+                                    int count_exist2 = crs2.getInt(1);
+                                    if (count_exist2 > 0) {
+                                        end3 = true;
+                                        String query = "SELECT * FROM Book WHERE ISBN IN (SELECT ISBN FROM Book_author WHERE BINARY author_name Like \'%" + author + "_\') ORDER BY title, ISBN";
+                                        ResultSet rs = stmt.executeQuery(query);
+                                        //System.out.println("\nRecord "+ count);
+                                        while (rs.next()){
+                                            System.out.println("Record " + count);
+                                            count++;
+                                            String isbn_q = rs.getString("ISBN");
+                                            String title_q = rs.getString("title");
+                                            int unit_price_q = rs.getInt("unit_price");
+                                            int no_of_copies_q = rs.getInt("no_of_copies");
+                                            
+                                            if (author_list4.contains(isbn_q) == false) {
+                                                author_list4.add(isbn_q);
+                                                System.out.println("ISBN: " + isbn_q);
+                                                System.out.println("Book Title:" + title_q);
+                                                System.out.println("Unit Price:" + unit_price_q);
+                                                System.out.println("No Of Available:" + no_of_copies_q);
+                                                Statement stmta = conn.createStatement();  //stmta = a new statement with query for book_author
+                                                String aquery = "SELECT author_name FROM Book_author WHERE ISBN = \"" + isbn_q + "\" ORDER BY author_name";
+                                                System.out.println("Authors:");
+                                                ResultSet ars = stmta.executeQuery(aquery);
+                                                int count_author = 1;
+                                                while (ars.next()){
+                                                    String author_q = ars.getString("author_name");
+                                                    System.out.println(count_author+" :"+author_q);
+                                                    count_author++;
+                                                }
+                                                
+                                                System.out.println();   
+                                            }
+                                            
+                                        }
+                                    } else {
+                                        System.out.println("cannot query the book");
+                                    }
+
+
+
+
+                                } else if (author.charAt(author.length() - 1) == '%') {
+                                    author = author.substring(0, author.length()-1);
+                                    List<String> author_list5 = new ArrayList<>();
+                                    String cquery = "SELECT count(*) FROM Book WHERE ISBN IN (SELECT ISBN FROM Book_author WHERE BINARY author_name = \"" + author + "\")";
+                                    ResultSet crs = stmt.executeQuery(cquery);
+                                    crs.next();
+                                    int count_exist = crs.getInt(1);
+                                    if (count_exist > 0) {
+                                        end3 = true;
+                                        String query = "SELECT * FROM Book WHERE ISBN IN (SELECT ISBN FROM Book_author WHERE BINARY author_name = \"" + author + "\") ORDER BY title, ISBN";
+                                        ResultSet rs = stmt.executeQuery(query);
+                                        //System.out.println("\nRecord "+ count);
+                                        while (rs.next()){
+                                            System.out.println("Record " + count);
+                                            count++;
+                                            String isbn_q = rs.getString("ISBN");
+                                            String title_q = rs.getString("title");
+                                            int unit_price_q = rs.getInt("unit_price");
+                                            int no_of_copies_q = rs.getInt("no_of_copies");
+                                            System.out.println("ISBN: " + isbn_q);
+                                            System.out.println("Book Title:" + title_q);
+                                            System.out.println("Unit Price:" + unit_price_q);
+                                            System.out.println("No Of Available:" + no_of_copies_q);
+                                            author_list5.add(isbn_q);
+                                            Statement stmta = conn.createStatement();  //stmta = a new statement with query for book_author
+                                            String aquery = "SELECT author_name FROM Book_author WHERE ISBN = \"" + isbn_q + "\" ORDER BY author_name";
+                                            System.out.println("Authors:");
+                                            ResultSet ars = stmta.executeQuery(aquery);
+                                            int count_author = 1;
+                                            while (ars.next()){
+                                                String author_q = ars.getString("author_name");
+                                                System.out.println(count_author+" :"+author_q);
+                                                count_author++;
+                                            }
+                                            
+                                            System.out.println();   
+                                        }
+                                    }
+
+                                    String cquery2 = "SELECT count(*) FROM Book WHERE ISBN IN (SELECT ISBN FROM Book_author WHERE BINARY author_name Like \'%" + author + "%\')";
+                                    ResultSet crs2 = stmt.executeQuery(cquery2);
+                                    crs2.next();
+                                    int count_exist2 = crs2.getInt(1);
+                                    if (count_exist2 > 0) {
+                                        end3 = true;
+                                        String query = "SELECT * FROM Book WHERE ISBN IN (SELECT ISBN FROM Book_author WHERE BINARY author_name Like \'%" + author + "%\') ORDER BY title, ISBN";
+                                        ResultSet rs = stmt.executeQuery(query);
+                                        //System.out.println("\nRecord "+ count);
+                                        while (rs.next()){
+                                            System.out.println("Record " + count);
+                                            count++;
+                                            String isbn_q = rs.getString("ISBN");
+                                            String title_q = rs.getString("title");
+                                            int unit_price_q = rs.getInt("unit_price");
+                                            int no_of_copies_q = rs.getInt("no_of_copies");
+                                            
+                                            if (author_list5.contains(isbn_q) == false) {
+                                                author_list5.add(isbn_q);
+                                                System.out.println("ISBN: " + isbn_q);
+                                                System.out.println("Book Title:" + title_q);
+                                                System.out.println("Unit Price:" + unit_price_q);
+                                                System.out.println("No Of Available:" + no_of_copies_q);
+                                                Statement stmta = conn.createStatement();  //stmta = a new statement with query for book_author
+                                                String aquery = "SELECT author_name FROM Book_author WHERE ISBN = \"" + isbn_q + "\" ORDER BY author_name";
+                                                System.out.println("Authors:");
+                                                ResultSet ars = stmta.executeQuery(aquery);
+                                                int count_author = 1;
+                                                while (ars.next()){
+                                                    String author_q = ars.getString("author_name");
+                                                    System.out.println(count_author+" :"+author_q);
+                                                    count_author++;
+                                                }
+                                                
+                                                System.out.println();
+                                            }
+                                               
+                                        }
+                                    }else {
+                                        System.out.println("cannot query the book");
+                                    }
+                                    
                                 }
                             }
-                            catch (SQLException e){
-                                System.out.println(e.getMessage());
-                            }
                         } break;
-                        
+
                         case 4:
                         end_book_search = true;
                         break;
@@ -232,8 +1286,6 @@ public class Customer {
         }
     }
     private static void orderCreation(){
-        //LocalDate order_date = LocalDate.now(); // Create a date object ------------TMP Order_date
-        //System.out.println(order_date); // Display the current date ----------------TMP Order_date
         List<String> c_id_list = new ArrayList<>();
         try {
             Statement stmt_c_id = conn.createStatement();
@@ -256,8 +1308,6 @@ public class Customer {
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
-        //System.out.println(c_id_list);
-        //System.out.println(isbn_list);
         String old_order_id = "00000000";
         String new_order_id = old_order_id;
         try {
@@ -269,10 +1319,8 @@ public class Customer {
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
-        //System.out.println(old_order_id);
         try {
             int old_o_id = Integer.parseInt(old_order_id);
-            //System.out.println(old_o_id);
             int new_o_id = old_o_id+1;
             int n_digits = 0;
             int tmp = new_o_id;
@@ -284,7 +1332,6 @@ public class Customer {
             for (int i = 0; i < 8 - n_digits; i++) {
                 new_order_id = "0"+new_order_id;
             }
-            //System.out.println(new_order_id);
         } catch (NumberFormatException e) {
             e.printStackTrace();
         }
@@ -296,7 +1343,6 @@ public class Customer {
         System.out.print("Please input your customer ID??");
         Scanner scanner = new Scanner(System.in);
         String c_id = scanner.next();
-        //System.out.println(c_id);
         if (c_id_list.contains(c_id)) {
             boolean end_order_creation = false;
             System.out.println(">> What books do you want to order??");
@@ -312,10 +1358,8 @@ public class Customer {
                     if (sus_order == true){
                         try {
                             Statement stmt_create_orders = conn.createStatement();
-                            //Remember to amend the order_date
                             stmt_create_orders.executeUpdate("INSERT into Orders VALUES (\""+ new_order_id+ "\", \"" + BookSystem.system_date + "\", 'N', " + (total_charge + 10) +", \"" + c_id + "\")");                            
                         } catch (SQLException e) {
-                            //System.out.println("[Error] System date is missing!");
                             e.printStackTrace();
                         }
                     }
@@ -336,7 +1380,7 @@ public class Customer {
                         }
                         
                     }
-                    //Add some sql statement here
+  
                 } else if (isbn_list.contains(order_isbn)) {
                     boolean correct_order_quantity = false;
                     while (!correct_order_quantity) {
@@ -347,7 +1391,6 @@ public class Customer {
                             if (order_quantity > 0) {
                                 correct_order_quantity = true;
                                 total_quantity = total_quantity + order_quantity;
-                                //System.out.println(order_quantity);
                                 try {
                                     Statement stmt_no_of_copies = conn.createStatement();
                                     String query = "SELECT no_of_copies FROM Book WHERE ISBN = \""+order_isbn+"\"";
@@ -366,17 +1409,16 @@ public class Customer {
                                 } catch (SQLException e) {
                                     System.out.println(e.getMessage());
                                 }
+
+                                
                                 if (no_of_copies >= order_quantity) {
-                                    //System.out.println("Current inventory: "+ no_of_copies);
-                                    //SQL to update the no_of_copies
                                     try {
                                         Statement stmt_update_quantity = conn.createStatement();
                                         stmt_update_quantity.executeUpdate("UPDATE Book SET no_of_copies = " + (no_of_copies - order_quantity) + " WHERE ISBN = \"" + order_isbn + "\""); 
                                     } catch (SQLException e) {
                                         e.printStackTrace();
                                     }
-                                    //System.out.println("INSERT INTO Ordering VALUES (\"" + new_order_id + "\", \"" + order_isbn + "\", "  + order_quantity + ")");
-                                    
+
                                     try {
                                         Statement stmt_create_ordering = conn.createStatement();
                                         stmt_create_ordering.executeUpdate("INSERT INTO Ordering VALUES (\"" + new_order_id + "\", \"" + order_isbn + "\", "  + order_quantity + ")");                            
@@ -385,8 +1427,7 @@ public class Customer {
                                     } catch (SQLException e) {
                                         e.printStackTrace();
                                     }
-                                    
-                                    //Insert into Ordering VALUES ("00000011","1-1234-1234-1", 3);
+
                                 } else {
                                     System.out.println("There is not enough inventory for this book! You can at most order "+ no_of_copies + ".");
                                 }
@@ -412,12 +1453,9 @@ public class Customer {
     }
     
     private static void orderAltering(){
-        //LocalDate order_date = LocalDate.now(); // Create a date object ------------TMP Order_date
-        //System.out.println(order_date); // Display the current date ----------------TMP Order_date
         System.out.print("Please enter the OrderID that you want to change: ");
         Scanner scanner_order_id = new Scanner(System.in);
         String o_id = scanner_order_id.next();
-        //System.out.println(o_id);
         List<String> o_id_list = new ArrayList<>();
         try {
             Statement stmt_o_id = conn.createStatement();
@@ -429,7 +1467,6 @@ public class Customer {
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
-        //System.out.println(o_id_list);
         if (o_id_list.contains(o_id)) {
             String orders_ship_status = "N";
             int orders_charge = 0;
@@ -462,9 +1499,6 @@ public class Customer {
             } catch (SQLException e) {
                 System.out.println(e.getMessage());
             }
-            //System.out.println(ordering_isbn_list);
-            //System.err.println(ordering_isbn_list.size());
-            //System.out.println(ordering_isbn_list.get(1));
             boolean correct_alter_no = false;
             while (!correct_alter_no) {
                 try {
@@ -592,120 +1626,129 @@ public class Customer {
                             } else if (add_remove.equals("remove")) {
                                 if (orders_ship_status.equals("Y")){
                                     System.out.println("The books in the order are shipped");
-                                } else {
-                                    boolean correct_remove_no = false;
-                                    while (!correct_remove_no) {
-                                        try {
-                                            System.out.print("Input the number: ");
-                                            Scanner scanner_remove = new Scanner(System.in);
-                                            int remove_no = scanner_remove.nextInt();
-                                            if (remove_no > 0) {
-                                                correct_remove_no = true;
-                                                int tmp_quantity = 0;
-                                                int tmp_no_of_copies = 0;
-                                                int tmp_unit_price = 0;
-                                                try {
-                                                    Statement stmt_alter_quantity = conn.createStatement();
-                                                    String query = "SELECT quantity FROM Ordering WHERE ISBN = \"" + ordering_isbn_list.get(alter_no - 1)+ "\" AND order_id = \"" +o_id + "\"";
-                                                    ResultSet rs_alter_quantity = stmt_alter_quantity.executeQuery(query);
-                                                    rs_alter_quantity.next();
-                                                    tmp_quantity = rs_alter_quantity.getInt(1);
-                                                } catch (SQLException e) {
-                                                    System.out.println(e.getMessage());
-                                                }
-                                                try {
-                                                    Statement stmt_alter_no_of_copies = conn.createStatement();
-                                                    String query = "SELECT no_of_copies FROM Book WHERE ISBN = \"" + ordering_isbn_list.get(alter_no - 1)+ "\"";
-                                                    ResultSet rs_alter_no_of_copies = stmt_alter_no_of_copies.executeQuery(query);
-                                                    rs_alter_no_of_copies.next();
-                                                    tmp_no_of_copies = rs_alter_no_of_copies.getInt(1);
-                                                } catch (SQLException e) {
-                                                    System.out.println(e.getMessage());
-                                                }
-                                                try {
-                                                    Statement stmt_alter_unit_price = conn.createStatement();
-                                                    String query = "SELECT unit_price FROM Book WHERE ISBN = \"" + ordering_isbn_list.get(alter_no - 1)+ "\"";
-                                                    ResultSet rs_alter_unit_price = stmt_alter_unit_price.executeQuery(query);
-                                                    rs_alter_unit_price.next();
-                                                    tmp_unit_price = rs_alter_unit_price.getInt(1);
-                                                } catch (SQLException e) {
-                                                    System.out.println(e.getMessage());
-                                                }
-                                                if (remove_no <= tmp_quantity) {
-                                                    try {
-                                                        Statement stmt_alter_quantity = conn.createStatement();
-                                                        stmt_alter_quantity.executeUpdate("UPDATE Ordering SET quantity = " + (tmp_quantity-remove_no) + " WHERE ISBN = \"" + ordering_isbn_list.get(alter_no - 1) + "\" AND order_id =\"" + o_id + "\""); 
-                                                    } catch (SQLException e) {
-                                                        e.printStackTrace();
-                                                    }
-                                                    System.out.println("Update is ok!");
+                                 
+                                    
+                                }else {
+                                    int tmp_quantity = 0;
+                                    try {
+                                        Statement stmt_alter_quantity = conn.createStatement();
+                                        String query = "SELECT quantity FROM Ordering WHERE ISBN = \"" + ordering_isbn_list.get(alter_no - 1)+ "\" AND order_id = \"" +o_id + "\"";
+                                        ResultSet rs_alter_quantity = stmt_alter_quantity.executeQuery(query);
+                                        rs_alter_quantity.next();
+                                        tmp_quantity = rs_alter_quantity.getInt(1);
+                                    } catch (SQLException e) {
+                                        System.out.println(e.getMessage());
+                                    }
+                                    if (tmp_quantity <= 0) {
+                                        System.out.println("The quantity that you ordered for this book is 0 already!");
+                                    } else {
+                                        boolean correct_remove_no = false;
+                                        while (!correct_remove_no) {
+                                            try {
+                                                System.out.print("Input the number: ");
+                                                Scanner scanner_remove = new Scanner(System.in);
+                                                int remove_no = scanner_remove.nextInt();
+                                                if (remove_no > 0) {
+                                                    correct_remove_no = true;
+                                                    int tmp_no_of_copies = 0;
+                                                    int tmp_unit_price = 0;
+                                                    
                                                     try {
                                                         Statement stmt_alter_no_of_copies = conn.createStatement();
-                                                        stmt_alter_no_of_copies.executeUpdate("UPDATE Book SET no_of_copies = " + (tmp_no_of_copies + remove_no) + " WHERE ISBN = \"" + ordering_isbn_list.get(alter_no - 1) + "\""); 
+                                                        String query = "SELECT no_of_copies FROM Book WHERE ISBN = \"" + ordering_isbn_list.get(alter_no - 1)+ "\"";
+                                                        ResultSet rs_alter_no_of_copies = stmt_alter_no_of_copies.executeQuery(query);
+                                                        rs_alter_no_of_copies.next();
+                                                        tmp_no_of_copies = rs_alter_no_of_copies.getInt(1);
                                                     } catch (SQLException e) {
-                                                        e.printStackTrace();
+                                                        System.out.println(e.getMessage());
                                                     }
-                                                    System.out.println("update done!!");
-                                                    if (remove_no == tmp_quantity) {
+                                                    try {
+                                                        Statement stmt_alter_unit_price = conn.createStatement();
+                                                        String query = "SELECT unit_price FROM Book WHERE ISBN = \"" + ordering_isbn_list.get(alter_no - 1)+ "\"";
+                                                        ResultSet rs_alter_unit_price = stmt_alter_unit_price.executeQuery(query);
+                                                        rs_alter_unit_price.next();
+                                                        tmp_unit_price = rs_alter_unit_price.getInt(1);
+                                                    } catch (SQLException e) {
+                                                        System.out.println(e.getMessage());
+                                                    }
+                                                    if (remove_no <= tmp_quantity) {
                                                         try {
-                                                            Statement stmt_alter_charge_all = conn.createStatement();
-                                                            stmt_alter_charge_all.executeUpdate("UPDATE Orders SET charge = 0 WHERE order_id = \"" + o_id + "\""); 
+                                                            Statement stmt_alter_quantity = conn.createStatement();
+                                                            stmt_alter_quantity.executeUpdate("UPDATE Ordering SET quantity = " + (tmp_quantity-remove_no) + " WHERE ISBN = \"" + ordering_isbn_list.get(alter_no - 1) + "\" AND order_id =\"" + o_id + "\""); 
                                                         } catch (SQLException e) {
                                                             e.printStackTrace();
+                                                        }
+                                                        System.out.println("Update is ok!");
+                                                        try {
+                                                            Statement stmt_alter_no_of_copies = conn.createStatement();
+                                                            stmt_alter_no_of_copies.executeUpdate("UPDATE Book SET no_of_copies = " + (tmp_no_of_copies + remove_no) + " WHERE ISBN = \"" + ordering_isbn_list.get(alter_no - 1) + "\""); 
+                                                        } catch (SQLException e) {
+                                                            e.printStackTrace();
+                                                        }
+                                                        System.out.println("update done!!");
+                                                        if (remove_no == tmp_quantity) {
+                                                            try {
+                                                                Statement stmt_alter_charge_all = conn.createStatement();
+                                                                stmt_alter_charge_all.executeUpdate("UPDATE Orders SET charge = 0 WHERE order_id = \"" + o_id + "\""); 
+                                                            } catch (SQLException e) {
+                                                                e.printStackTrace();
+                                                            }
+                                                        } else {
+                                                            try {
+                                                                Statement stmt_alter_charge = conn.createStatement();
+                                                                stmt_alter_charge.executeUpdate("UPDATE Orders SET charge = " + (orders_charge - remove_no * (tmp_unit_price + 10)) + " WHERE order_id = \"" + o_id + "\""); 
+                                                            } catch (SQLException e) {
+                                                                e.printStackTrace();
+                                                            }
+                                                        }
+                                                        System.out.println("updated charge");
+                                                        try {
+                                                            Statement stmt_alter_date = conn.createStatement();
+                                                            stmt_alter_date.executeUpdate("UPDATE Orders SET o_date = \"" + BookSystem.system_date + "\" WHERE order_id = \"" + o_id + "\""); 
+                                                        } catch (SQLException e) {
+                                                            //System.out.println("[Error] System date is missing!");
+                                                            e.printStackTrace();
+                                                        }
+                                                        try {
+                                                            Statement stmt_orders_check_new = conn.createStatement();
+                                                            String query = "SELECT * FROM Orders WHERE order_id = \"" + o_id+ "\"";
+                                                            ResultSet rs_orders_check_new = stmt_orders_check_new.executeQuery(query);
+                                                            while (rs_orders_check_new.next()) {
+                                                                String orders_ship_status_new = rs_orders_check_new.getString("shipping_status");
+                                                                int orders_charge_new = rs_orders_check_new.getInt("charge");
+                                                                String orders_c_id_new = rs_orders_check_new.getString("customer_id");
+                                                                System.out.println("order_id:"+o_id+"  shipping:"+orders_ship_status_new+"  charge="+orders_charge_new+"  customerID="+orders_c_id_new);
+                                                            }
+                                                        } catch (SQLException e) {
+                                                            System.out.println(e.getMessage());
+                                                        }
+                                                        try {
+                                                            int tmp_count_new = 1;
+                                                            Statement stmt_ordering_check_new = conn.createStatement();
+                                                            String query = "SELECT * FROM Ordering WHERE order_id = \"" + o_id+ "\"";
+                                                            ResultSet rs_ordering_check_new = stmt_ordering_check_new.executeQuery(query);
+                                                            while (rs_ordering_check_new.next()) {
+                                                                String ordering_isbn_new = rs_ordering_check_new.getString("ISBN");
+                                                                int ordering_quantity_new = rs_ordering_check_new.getInt("quantity");
+                                                                System.out.println("book no: "+ tmp_count_new+ " ISBN = "+ordering_isbn_new+" quantity = "+ordering_quantity_new);
+                                                                tmp_count_new++;
+                                                            }
+                                                        } catch (SQLException e) {
+                                                            System.out.println(e.getMessage());
                                                         }
                                                     } else {
-                                                        try {
-                                                            Statement stmt_alter_charge = conn.createStatement();
-                                                            stmt_alter_charge.executeUpdate("UPDATE Orders SET charge = " + (orders_charge - remove_no * (tmp_unit_price + 10)) + " WHERE order_id = \"" + o_id + "\""); 
-                                                        } catch (SQLException e) {
-                                                            e.printStackTrace();
-                                                        }
-                                                    }
-                                                    System.out.println("updated charge");
-                                                    try {
-                                                        Statement stmt_alter_date = conn.createStatement();
-                                                        stmt_alter_date.executeUpdate("UPDATE Orders SET o_date = \"" + BookSystem.system_date + "\" WHERE order_id = \"" + o_id + "\""); 
-                                                    } catch (SQLException e) {
-                                                        //System.out.println("[Error] System date is missing!");
-                                                        e.printStackTrace();
-                                                    }
-                                                    try {
-                                                        Statement stmt_orders_check_new = conn.createStatement();
-                                                        String query = "SELECT * FROM Orders WHERE order_id = \"" + o_id+ "\"";
-                                                        ResultSet rs_orders_check_new = stmt_orders_check_new.executeQuery(query);
-                                                        while (rs_orders_check_new.next()) {
-                                                            String orders_ship_status_new = rs_orders_check_new.getString("shipping_status");
-                                                            int orders_charge_new = rs_orders_check_new.getInt("charge");
-                                                            String orders_c_id_new = rs_orders_check_new.getString("customer_id");
-                                                            System.out.println("order_id:"+o_id+"  shipping:"+orders_ship_status_new+"  charge="+orders_charge_new+"  customerID="+orders_c_id_new);
-                                                        }
-                                                    } catch (SQLException e) {
-                                                        System.out.println(e.getMessage());
-                                                    }
-                                                    try {
-                                                        int tmp_count_new = 1;
-                                                        Statement stmt_ordering_check_new = conn.createStatement();
-                                                        String query = "SELECT * FROM Ordering WHERE order_id = \"" + o_id+ "\"";
-                                                        ResultSet rs_ordering_check_new = stmt_ordering_check_new.executeQuery(query);
-                                                        while (rs_ordering_check_new.next()) {
-                                                            String ordering_isbn_new = rs_ordering_check_new.getString("ISBN");
-                                                            int ordering_quantity_new = rs_ordering_check_new.getInt("quantity");
-                                                            System.out.println("book no: "+ tmp_count_new+ " ISBN = "+ordering_isbn_new+" quantity = "+ordering_quantity_new);
-                                                            tmp_count_new++;
-                                                        }
-                                                    } catch (SQLException e) {
-                                                        System.out.println(e.getMessage());
+                                                        System.out.println("The number you inputted is too large!\n");
                                                     }
                                                 } else {
-                                                    System.out.println("The number you inputted is too large!\n");
+                                                    System.out.println("[Error] You should input positive integers!");
                                                 }
-                                            } else {
-                                                System.out.println("[Error] You should input positive integers!");
+                                            } catch (Exception e) {
+                                                System.out.println("[Error] Please input an integer! (e.g. 1)");
                                             }
-                                        } catch (Exception e) {
-                                            System.out.println("[Error] Please input an integer! (e.g. 1)");
                                         }
+
                                     }
+                                    
                                 }
                             } else {
                                 System.out.println("[Error] Invalid input!\n");
@@ -730,12 +1773,6 @@ public class Customer {
         System.out.print("Please Input Customer ID: ");
         Scanner scanner_customer_id = new Scanner(System.in);
         String customer_id = scanner_customer_id.next();
-        //System.out.println(customer_id);
-        
-        //System.out.println(year);
-        //LocalDate order_date = LocalDate.now(); // Create a date object ------------TMP Order_date
-        //System.out.println(order_date); // Display the current date ----------------TMP Order_date
-        //System.out.println(order_date.getYear());
         List<String> c_id_list = new ArrayList<>();
         try {
             Statement stmt_c_id = conn.createStatement();
@@ -755,22 +1792,32 @@ public class Customer {
                     Scanner scanner_year = new Scanner(System.in);
                     int year = scanner_year.nextInt();
                     correct_year = true;
-                    try {
-                        int orders_count = 1;
-                        Statement stmt_orders_query = conn.createStatement();
-                        String query = "SELECT * FROM Orders WHERE customer_id = \"" + customer_id+ "\" AND YEAR(o_date) = " + year;
-                        ResultSet rs_orders_query = stmt_orders_query.executeQuery(query);
-                        while (rs_orders_query.next()) {
-                            String orders_oid = rs_orders_query.getString("order_id");
-                            java.sql.Date orders_date = rs_orders_query.getDate("o_date");
-                            int orders_charge = rs_orders_query.getInt("charge");
-                            String orders_ship_status = rs_orders_query.getString("shipping_status");
-                            System.out.println("\nRecord : " + orders_count + "\nOrderID : " + orders_oid + "\nOrderDate : " + orders_date + "\ncharge : " + orders_charge + "\nshipping status : " + orders_ship_status);
-                            orders_count++;
+                    Statement count_stmt_orders_query = conn.createStatement();
+                    String cquery = "SELECT count(*) FROM Orders WHERE customer_id = \"" + customer_id+ "\" AND YEAR(o_date) = " + year;
+                    ResultSet count_rs_orders_query = count_stmt_orders_query.executeQuery(cquery);
+                    count_rs_orders_query.next();
+                    int count_order_oid = count_rs_orders_query.getInt(1);
+                    if (count_order_oid <= 0) {
+                        System.out.println("No order from you in this year");
+                    } else {
+                        try {
+                            int orders_count = 1;
+                            Statement stmt_orders_query = conn.createStatement();
+                            String query = "SELECT * FROM Orders WHERE customer_id = \"" + customer_id+ "\" AND YEAR(o_date) = " + year;
+                            ResultSet rs_orders_query = stmt_orders_query.executeQuery(query);
+                            while (rs_orders_query.next()) {
+                                String orders_oid = rs_orders_query.getString("order_id");
+                                java.sql.Date orders_date = rs_orders_query.getDate("o_date");
+                                int orders_charge = rs_orders_query.getInt("charge");
+                                String orders_ship_status = rs_orders_query.getString("shipping_status");
+                                System.out.println("\nRecord : " + orders_count + "\nOrderID : " + orders_oid + "\nOrderDate : " + orders_date + "\ncharge : " + orders_charge + "\nshipping status : " + orders_ship_status);
+                                orders_count++;
+                            }
+                        } catch (SQLException e) {
+                            System.out.println(e.getMessage());
                         }
-                    } catch (SQLException e) {
-                        System.out.println(e.getMessage());
                     }
+                    
                 } catch (Exception e) {
                     System.out.println("[Error] Please input year according to this format: YYYY! (e.g. 2010)");
                 }

@@ -133,6 +133,8 @@ public class BookSystem {
                 String CurrentLine;
                 //read the file line by line
                 while ((CurrentLine = br.readLine()) != null){
+                    CurrentLine = CurrentLine.replace("'", "\\\'");
+
                     String[] columns = CurrentLine.split("\\|");
                     switch (i) {
                         case "book.txt":
