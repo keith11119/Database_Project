@@ -127,7 +127,7 @@ public class Customer {
                         count = 1;
                         while (!end2) {
                             System.out.print("Input the Book Title: ");
-                            Scanner scan_title = new Scanner(System.in);
+                            Scanner scan_title = new Scanner(System.in).useDelimiter("\\n");
                             String title = scan_title.next();
                             Statement stmt = conn.createStatement();
 
@@ -691,7 +691,7 @@ public class Customer {
                         count = 1;
                         while (!end3) {
                             System.out.print("Input the Author Name: ");
-                            Scanner scan_author = new Scanner(System.in);
+                            Scanner scan_author = new Scanner(System.in).useDelimiter("\\n");
                             String author = scan_author.next();
                             Statement stmt = conn.createStatement();
                             if (author.charAt(0) != '%' && author.charAt(0) != '_') {
@@ -1612,6 +1612,9 @@ public class Customer {
                                                 } else {
                                                     System.out.println("There is not enough copies available!\n");
                                                 }
+                                            } else if (add_no == 0) {
+                                                System.out.println("No updates!");
+                                                correct_add_no = true;
                                             } else {
                                                 System.out.println("[Error] You should input positive integer!");
                                             }
@@ -1648,7 +1651,7 @@ public class Customer {
                                                 System.out.print("Input the number: ");
                                                 Scanner scanner_remove = new Scanner(System.in);
                                                 int remove_no = scanner_remove.nextInt();
-                                                if (remove_no > 0) {
+                                                if (remove_no >= 0) {
                                                     correct_remove_no = true;
                                                     int tmp_no_of_copies = 0;
                                                     int tmp_unit_price = 0;
@@ -1739,6 +1742,9 @@ public class Customer {
                                                     } else {
                                                         System.out.println("The number you inputted is too large!\n");
                                                     }
+                                                } else if (remove_no == 0) {
+                                                    System.out.println("No updates!");
+                                                    correct_remove_no = true;
                                                 } else {
                                                     System.out.println("[Error] You should input positive integers!");
                                                 }

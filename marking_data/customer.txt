@@ -1,0 +1,33 @@
+adafu|Ada|222,Shatin,Hong Kong|4444-4444-4444-4444
+cwwong|Raymond|123,Shatin,Hong Kong|1234-1234-1234-1234
+hndai|Henry|567,Shatin,Hong Kong|1111-1111-1111-1111
+hyyue|Willy|234,Kwai Chung,Hong Kong|4321-4321-4321-4321
+raymond|Raymond Wong|999,Tai Wai,Hong Kong|9999-9999-9999-9999
+twleung|Oscar|890,Tin Shui Wai,Hong Kong|2222-2222-2222-2222
+wcliew|Alan|333,Tsuen Wan,Hong Kong|5555-5555-5555-5555
+xcai|Teresa|111,Shatin,Hong Kong|3333-3333-3333-3333
+qnqxx|Smith|751,Aberdeen,Hong Kong|3580-1054-3702-1227
+nqlh|Jones|634,Cheung Chau,Hong Kong|3376-6715-9332-8258
+nrvkg|Williams|555,Discovery Bay,Hong Kong|1917-2702-7640-1342
+jljff|Taylor|857,Jardine's Lookout,Hong Kong|2382-7205-8413-5564
+hqbf|Brown|940,Ha Tsuen,Hong Kong|3288-6552-7608-6637
+scngv|Davies|116,Kam Tin,Hong Kong|8968-2004-7612-4261
+otbiaa|Evans|292,Kwun Tong,Hong Kong|3580-5806-2139-1059
+idiq|Wilson|420,Kwu Tung,Hong Kong|5160-1208-5868-1338
+duexw|Thomas|125,Lau Fau Shan,Hong Kong|8103-4007-2714-3076
+lnfqt|Johnson|841,Lei Yue Mun,Hong Kong|5473-3703-7082-5540
+jpoui|Smith|351,Luen Wo Hui,Hong Kong|7256-4547-4756-2790
+dccie|Jones|706,Ma Wan,Hong Kong|1110-2880-6910-7850
+nspgnj|Williams|461,Mui Wo,Hong Kong|8602-9338-5501-8430
+dccpu|Taylor|275,Ping Shan,Hong Kong|4354-2304-6180-4332
+xsjx|Brown|884,Peng Chau,Hong Kong|9922-5715-1717-6543
+jgecb|Davies|252,Sai Kung,Hong Kong|3157-1996-4711-2912
+sglgk|Evans|556,San Tin,Hong Kong|1589-1644-5662-6699
+lqrhf|Wilson|388,Sha Tau Kok,Hong Kong|6366-8275-6253-3618
+avoxg|Thomas|843,Sham Tseng,Hong Kong|4619-1948-2432-8801
+jqmpt|Johnson|224,Shek O,Hong Kong|1635-8846-4779-2833
+frxfo|Kevin|819,Sok Kwu Wan,Hong Kong|6428-9753-8201-8572
+hcmp|Stephen|513,Stanley,Hong Kong|1072-2390-6131-3988
+jcnfk|Stephen|952,Tai O,Hong Kong|9933-3379-7902-1716
+fena|Russell|458,Yuen Long Town,Hong Kong|6714-6954-9025-8930
+spis|James|540,Yung Shue Wan,Hong Kong|5814-8621-9223-9490

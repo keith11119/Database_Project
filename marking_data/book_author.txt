@@ -1,0 +1,37 @@
+1-1234-1234-1|Ada
+1-1234-1234-1|Raymond
+1-1234-1234-1|Willy
+2-2345-2345-2|Henry
+2-2345-2345-2|Teresa
+3-3456-3456-3|Ada
+3-3456-3456-3|Alan
+4-4567-4567-4|Magic
+5-5678-5678-5|Oscar
+6-6789-6789-6|C. S. Lewis
+7-7890-7890-7|H. Rider Haggard
+8-8901-8901-8|Carlo Collodi
+2-4550-6297-6|Dan Brown
+8-2157-7885-0|J. K. Rowling
+4-4915-7811-6|J. K. Rowling
+5-1595-2597-6|J. K. Rowling
+1-3140-6774-0|J. K. Rowling
+8-1647-4386-2|J. K. Rowling
+5-6761-0842-6|J. K. Rowling
+0-2043-9655-3|Paulo Coelho
+0-6298-3796-9|J. D. Salinger
+8-9243-6517-1|Robert James Waller
+8-5307-1727-6|Lew Wallace
+3-9587-5881-3|Louise Hay
+9-9316-2369-6|Gabriel Garcia Marquez
+4-7194-5956-4|Vladimir Nabokov
+3-5045-3409-7|Johanna Spyri
+8-9882-2917-4|Dr. Benjamin Spock
+7-2269-0069-5|Lucy Maud Montgomery
+0-9964-1838-2|Anna Sewell
+3-5885-2026-4|Umberto Eco
+9-6315-2755-8|Jack Higgins
+4-2843-0271-4|Richard Adams
+5-2843-0271-5|Shere Hite
+6-2843-0271-6|Garth Williams
+6-2843-0271-6|E. B. White
+7-2843-0271-7|J. P. Donleavy

@@ -1,0 +1,32 @@
+1-1234-1234-1|Database I|100|50
+2-2345-2345-2|Database II|110|40
+3-3456-3456-3|Operating System|130|20
+4-4567-4567-4|Programming in C language|140|10
+5-5678-5678-5|Programming in Java language|150|5
+6-6789-6789-6|The Lion, the Witch and the Wardrobe|110|45
+7-7890-7890-7|She: A History of Adventure|150|3
+8-8901-8901-8|The Adventures of Pinocchio|40|54
+2-4550-6297-6|The Da Vinci Code|40|17
+8-2157-7885-0|Harry Potter and the Chamber of Secrets|40|65
+4-4915-7811-6|Harry Potter and the Prisoner of Azkaban|190|52
+5-1595-2597-6|Harry Potter and the Goblet of Fire|180|13
+1-3140-6774-0|Harry Potter and the Order of the Phoenix|170|54
+8-1647-4386-2|Harry Potter and the Half-Blood Prince|200|14
+5-6761-0842-6|Harry Potter and the Deathly Hallows|90|71
+0-2043-9655-3|The Alchemist (O Alquimista)|170|63
+0-6298-3796-9|The Catcher in the Rye|10|53
+8-9243-6517-1|The Bridges of Madison County|160|50
+8-5307-1727-6|Ben-Hur: A Tale of the Christ|80|45
+3-9587-5881-3|You Can Heal Your Life|180|79
+9-9316-2369-6|One Hundred Years of Solitude|40|1
+4-7194-5956-4|Lolita|160|70
+3-5045-3409-7|Heidi|20|14
+8-9882-2917-4|The Common Sense Book of Baby and Child Care|50|77
+7-2269-0069-5|Anne of Green Gables|180|71
+0-9964-1838-2|Black Beauty|140|11
+3-5885-2026-4|The Name of the Rose|100|7
+9-6315-2755-8|The Eagle Has Landed|110|32
+4-2843-0271-4|Watership Down|70|58
+5-2843-0271-5|The Hite Report|30|56
+6-2843-0271-6|Charlotte's Web|60|7
+7-2843-0271-7|The Ginger Man|60|3

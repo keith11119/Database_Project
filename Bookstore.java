@@ -65,51 +65,60 @@ public class Bookstore {
         char status, updateYN;
         String oid, inputYN;
         System.out.print("Please input the order ID: ");
-        // check if the input order can be updated
-        do{
-            Scanner oidscanner = new Scanner (System.in);
-            oid = oidscanner.next();
-            while (!validID(oid)){
-                // let users exit in case they do not know any valid order id
-                if (oid.equals("EXIT")){
-                    break;
-                }
-                System.out.println("[ERROR] Invalid Order ID. Please input the Order ID again or type \"EXIT\" to quit.");
-                oid = oidscanner.next();
-            }
+        Scanner oidscanner = new Scanner (System.in);
+        oid = oidscanner.next();
+        while (!validID(oid)){
+            // let users exit in case they do not know any valid order id
             if (oid.equals("EXIT")){
                 break;
             }
-            // return the shipping status and quantity of the input order id
-            status = ShippingStatus(oid);
-            quan = OrderQuantity(oid);
-            if (status == 'E' || quan == -1 ){
-                oid = "EXIT";
-                break;
-            }
-            System.out.println("the shipping status of " + oid + " is " + status + " and " + quan + " books ordered");
-            if (!(status == 'N' && quan > 0))
-                System.out.println("[ERROR] Update is not allowed for this order. Please input another Order ID.");
-        } while (!(status == 'N' && quan > 0));
+            System.out.println("[ERROR] Invalid Order ID. Please input the Order ID again or type \"EXIT\" to quit.");
+            oid = oidscanner.next();
+        }
+
+        status = ShippingStatus(oid);
+        quan = OrderQuantity(oid);
+        if (status == 'E' || quan == -1 ){
+            oid = "EXIT";
+        }
+        
         
         if (!oid.equals("EXIT")){
+            // return the shipping status and quantity of the input order id
+            System.out.println("the shipping status of " + oid + " is " + status + " and " + quan + " books ordered");
+            // check if the input order can be updated
+            boolean allow = false;
+            if (status == 'N' && quan > 0){
+                allow = true;
+            }
+            else {
+                allow = false;
+            }
             // update the shipping status as requested
             System.out.print("Are you sure to update the shipping status? (Yes=Y) ");
             do{
                 Scanner YNscanner = new Scanner (System.in);
                 inputYN = YNscanner.next();
+                //System.out.println("1 " + inputYN);
                 while (!(inputYN.length() == 1)){
                     System.out.print("Invalid Input. Please try again (Y or N): ");
                     inputYN = YNscanner.next();
                 }
-                updateYN = inputYN.charAt(1);
+                updateYN = inputYN.charAt(0);
+                //System.out.println("2" + updateYN);
                 if (!(updateYN == 'Y' || updateYN == 'N'))
                     System.out.println("[ERROR] Invalid input. Please input Y or N.");
             } while (!(updateYN == 'Y' || updateYN == 'N'));
-        
-            if (updateYN == 'Y'){
+            //System.out.println("3" + updateYN);
+            if (updateYN == 'Y' && allow == true){
                 updateShippingStatus(oid);
                 System.out.println("Updated shipping status.");
+            }
+            else if (updateYN == 'N'){
+                System.out.println("Shipping status NOT updated. Return to Bookstore Interface");
+            }
+            else if (allow == false){
+                System.out.println("[ERROR] Update is not allowed for this order.");
             }
             else {
                 System.out.println("Shipping status NOT updated. Return to Bookstore Interface");
@@ -302,4 +311,6 @@ public class Bookstore {
         }
     }
 }
+
+
 
