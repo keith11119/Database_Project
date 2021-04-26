@@ -19,7 +19,65 @@ Running:
     -if the data format is not correct, there is an error message "Incorrect format."
     -if the data is set backward (earlier than the latest order date or the original system date), there is an error 
     message "[Error] Invalid Input! It is set backward!"
+
+    Customer Interface:
+
+Book Search 
+a. Query by ISBN
+You are required to input the ISBN of the book. Exact match is required, otherwise nothing can be searched. This function will return "Book Title", "ISBN", "Unit Price", "No. of Copies Available" and "A List of Authors" 
+b. Query by Book Title
+This supports both partial and exact match. You can include either '_' or '%' right before or after the search string. This function will return "Book Title", "ISBN", "Unit Price", "No. of Copies Available" and "A List of Authors" 
+c. Query by Author Name
+This supports both partial and exact match. You can include either '_' or '%' right before or after the search string. This function will return "Book Title", "ISBN", "Unit Price", "No. of Copies Available" and "A List of Authors"
+
+
+Order Creation 
+- You can create new order here. You need to input the correct customer ID and then the ISBN of the Books that you want to order. You can press 'L' to see the order list and 'F' to finish the ordering.
+
+Order Altering 
+- You can either Add or Remove the orders here that are not yet shipped. You have to input the correct Order ID. Only exact match is supported here. After you input the Order ID, you will see the order list and you need to select which books you want to alter. Then, type 'add' or 'remove', followed by an integer to change the quantity of the books that you ordered.
+
+Order Query 
+- You can see the list of orders of a user in a particularly year. A correct customer ID is required and only exact match is supported here.
+Bookstore Interface:
+
+Order Update 
+- Input an order ID, the system will check if the order's shipping status could be updated and update it as requested 
+- if the input is not a valid order ID(an existing order ID in the database), the system will require another input or input EXIT to quit 
+- the ID is valid, check if the shipping status could be updated (is a 'N') and quantity (if it is > 0), prompt the user and require another input if the order cannot be updated. 
+- if the shipping status or quantity is invalid (shipping status is neither Y or N or quantity is not a number), quit the function
+
+Order Query 
+- return the details of all shipped orders and the total charge in the input month - if the input month does not have any record of orders, it will return "No record found for the input month."
+
+N Most Popular Book Query 
+- if the input N is larger the number of books with quantity > 0, return all books with quantity > 0 ii. if the books have the same total number of order copies as the N-th book, it will return those books as well
     
   
- 
+  Customer Interface:
+1. Book Search
+  a. Query by ISBN
+  - You are required to input the ISBN of the book. Exact match is required, otherwise nothing can be searched. This function will return "Book Title", "ISBN", "Unit Price", "No. of Copies Available" and "A List of Authors"
+  b. Query by Book Title
+  - This supports both partial and exact match. You can include either '_' or '%' right before or after the search string. This function will return "Book Title", "ISBN", "Unit Price", "No. of Copies Available" and "A List of Authors"
+  c. Query by Author Name
+  - This supports both partial and exact match. You can include either '_' or '%' right before or after the search string. This function will return "Book Title", "ISBN", "Unit Price", "No. of Copies Available" and "A List of Authors"
+2. Order Creation
+  a. You can create new order here. You need to input the correct customer ID and then the ISBN of the Books that you want to order. You can press 'L' to see the order list and 'F' to finish the ordering.
+3. Order Altering
+  a. You can either Add or Remove the orders here that are not yet shipped. You have to input the correct Order ID. Only exact match is supported here. After you input the Order ID, you will see the order list and you need to select which books you want to alter. Then, type 'add' or 'remove', followed by an integer to change the quantity of the books that you ordered. 
+4. Order Query
+  a. You can see the list of orders of a user in a particularly year. A correct customer ID is required and only exact match is supported here. 
+
+  Bookstore Interface:
+  1. Order Update - Input an order ID, the system will check if the order's shipping status could be updated and update it as requested
+    - if the input is not a valid order ID(an existing order ID in the database), the system will require another input or input EXIT to quit
+    - the ID is valid, check if the shipping status could be updated (is a 'N') and quantity (if it is > 0), prompt the user and require another input if the order cannot be updated.
+    - if the shipping status or quantity is invalid (shipping status is neither Y or N or quantity is not a number), quit the function 
+  2. Order Query - return the details of all shipped orders and the total charge in the input month
+    - if the input month does not have any record of orders, it will return "No record found for the input month."
+  3. N Most Popular Book Query
+    - if the input N is larger the number of books with quantity > 0, return all books with quantity > 0
+    ii. if the books have the same total number of order copies as the N-th book, it will return those books as well
+
 
